@@ -53,6 +53,11 @@ args <- parse_args(p)
 ######################################################################################
 #Functionality of argument
 
+#Argument to add
+if(args$add_target){
+  targetName <- readline("Enter the name of the target algorithm to add: " )
+  print(targetName)
+}
 
 #Argument to list
 if(args$list_scenario){
