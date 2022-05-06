@@ -1,5 +1,7 @@
 library(argparser, quietly=TRUE)
 library(readr)
+library("fs")  # File manipulations
+library(tidyverse)  # Data manipulation
 
 # Create a parser
 p <- arg_parser("Help")
@@ -56,7 +58,23 @@ args <- parse_args(p)
 #Argument to add
 if(args$add_target){
   targetName <- readline("Enter the name of the target algorithm to add: " )
-  print(targetName)
+  targetDescription <- readline("Enter a description corresponding to the target to enter: ")
+  routeTargetRunner <- readline("Enter the path where the target's runner file is hosted: ")
+  executablePathTarget <- readline("Enter the path of the target executable: ")
+  
+  #Add data to the file system
+  
+  targetData <- list(targetName, targetDescription, routeTargetRunner, executablePathTarget)
+  
+  fileRoot <- getwd()
+  subDir <- "/FileSystem/Target.txt"
+  route <- paste(fileRoot, subDir, sep = "")
+  fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
+  targetData <- paste(fileData, ",", targetData, sep = "")
+  
+  setwd("C:/Users/vmada/OneDrive/Escritorio/Proyecto_titulo/FileSystem")
+  write.table(targetData, "Target.txt" , sep = ",", row.names = FALSE, col.names = FALSE)
+  setwd("C:/Users/vmada/OneDrive/Escritorio/Proyecto_titulo")
 }
 
 #Argument to list
@@ -109,3 +127,4 @@ if(args$list_iteration){
 }
 
 #Argument to view
+
