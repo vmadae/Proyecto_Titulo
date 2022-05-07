@@ -57,6 +57,7 @@ args <- parse_args(p)
 
 #Argument to add
 if(args$add_target){
+  #Request data from the user
   targetName <- readline("Enter the name of the target algorithm to add: " )
   targetDescription <- readline("Enter a description corresponding to the target to enter: ")
   routeTargetRunner <- readline("Enter the path where the target's runner file is hosted: ")
@@ -66,15 +67,12 @@ if(args$add_target){
   
   targetData <- list(targetName, targetDescription, routeTargetRunner, executablePathTarget)
   
-  fileRoot <- getwd()
-  subDir <- "/FileSystem/Target.txt"
-  route <- paste(fileRoot, subDir, sep = "")
-  fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
-  targetData <- paste(fileData, ",", targetData, sep = "")
+  setwd("../Proyecto_titulo/FileSystem")
+  write.table(targetData, file = "Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  setwd("..")
   
-  setwd("C:/Users/vmada/OneDrive/Escritorio/Proyecto_titulo/FileSystem")
-  write.table(targetData, "Target.txt" , sep = ",", row.names = FALSE, col.names = FALSE)
-  setwd("C:/Users/vmada/OneDrive/Escritorio/Proyecto_titulo")
+  
+  #Add files to the file system
 }
 
 #Argument to list

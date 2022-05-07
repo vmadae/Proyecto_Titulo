@@ -1,8 +1,3 @@
-"Prueba
-PruebaTarget1"
-"Prueba
-Esto es una prueba"
-"Prueba
-prueba"
-"Prueba
-prueba"
+Name,Description,Target-runner-route,Executable-path
+prueba,prueba,prueba,prueba
+"PruebaTarget1","Esto es una prueba","prueba","prueba"
