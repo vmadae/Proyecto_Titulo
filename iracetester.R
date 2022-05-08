@@ -1,12 +1,13 @@
 library(argparser, quietly=TRUE)
 library(readr)
-library("fs")  # File manipulations
-library(tidyverse)  # Data manipulation
+
+
+###############################################################################################################
+# Add command line arguments
+###############################################################################################################
 
 # Create a parser
 p <- arg_parser("Help")
-
-# Add command line arguments
 
 #Arguments to list
 
@@ -52,10 +53,13 @@ p <- add_argument(p, "--web", help="Generate website in shiny", type="string", f
 # Parse the command line arguments
 args <- parse_args(p)
 
-######################################################################################
+###############################################################################################################
 #Functionality of argument
-
+###############################################################################################################
 #Argument to add
+###############################################################################################################
+
+#add target
 if(args$add_target){
   #Request data from the user
   targetName <- readline("Enter the name of the target algorithm to add: " )
@@ -64,8 +68,6 @@ if(args$add_target){
   nameTargetRunner <- readline("Enter the target runner filename with file type: ")
   executablePathTarget <- readline("Enter the path of the target executable: ")
   nameExecutableTarget <- readline("Enter the target executable filename with file type: ")
-  
-  
   
   #Add files to the file system
   #Create folder
@@ -85,17 +87,68 @@ if(args$add_target){
   file.copy(executablePathTarget, route) 
   executablePathTarget <- paste(route, nameExecutableTarget, sep = "/") 
   
-  setwd("../../..")
+  setwd("../../../..")
   
   #Add data to the file system
   targetData <- list(targetName, targetDescription, routeTargetRunner, executablePathTarget)
   setwd("../Proyecto_titulo/FileSystem")
   write.table(targetData, file = "Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   setwd("..")
+}
+
+#add parameters
+if(args$add_parameters){
+  #Request data from the user
   
 }
 
+#add instances
+if(args$add_instances){
+  #Request data from the user
+  
+}
+
+#add scenario
+if(args$add_scenario){
+  #Request data from the user
+  
+}
+
+#add version
+if(args$add_version){
+  #Request data from the user
+  versionNumber <- readline("Enter the version number of irace to add: " )
+  versionDescription <- readline("Enter a description corresponding to the version of irace to enter: ")
+  versionRoute <- readline("Enter the path where the irace version is located: ")
+  nameVersion <- readline("Enter the name with the file type of the version to add:: ")
+  
+  #Add files to the file system
+  #Create folder
+  setwd("../Proyecto_titulo/FileSystem/Files/Version")
+  dir.create(versionNumber)
+  
+  fileRoot <- getwd()
+  route <- paste(fileRoot, versionNumber, sep = "/") 
+  setwd(route)
+  
+  #add to version 
+  file.copy(versionRoute, route)
+  versionRoute <- paste(route, nameVersion, sep = "/")
+  
+  setwd("../../../..")
+  
+  #Add data to the file system
+  versionData <- list(versionNumber, versionDescription, versionRoute)
+  setwd("../Proyecto_titulo/FileSystem")
+  write.table(versionData, file = "Version.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  setwd("..")
+}
+
+###############################################################################################################
 #Argument to list
+###############################################################################################################
+
+#list scenario
 if(args$list_scenario){
   fileRoot <- getwd()
   subDir <- "/FileSystem/Scenario.txt"
@@ -104,6 +157,7 @@ if(args$list_scenario){
   print(fileData)
 }
 
+#list target
 if(args$list_target){
   fileRoot <- getwd()
   subDir <- "/FileSystem/Target.txt"
@@ -112,6 +166,7 @@ if(args$list_target){
   print(fileData)
 }
 
+#list parameters
 if(args$list_parameters){
   fileRoot <- getwd()
   subDir <- "/FileSystem/Parameters.txt"
@@ -120,6 +175,7 @@ if(args$list_parameters){
   print(fileData)
 }
 
+#list instances
 if(args$list_instances){
   fileRoot <- getwd()
   subDir <- "/FileSystem/Instances.txt"
@@ -128,6 +184,7 @@ if(args$list_instances){
   print(fileData)
 }
 
+#list versions
 if(args$list_versions){
   fileRoot <- getwd()
   subDir <- "/FileSystem/Version.txt"
@@ -136,6 +193,7 @@ if(args$list_versions){
   print(fileData)
 }
 
+#list iteration
 if(args$list_iteration){
   fileRoot <- getwd()
   subDir <- "/FileSystem/Iteration.txt"
@@ -144,5 +202,6 @@ if(args$list_iteration){
   print(fileData)
 }
 
+###############################################################################################################
 #Argument to view
-
+###############################################################################################################
