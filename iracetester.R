@@ -61,18 +61,38 @@ if(args$add_target){
   targetName <- readline("Enter the name of the target algorithm to add: " )
   targetDescription <- readline("Enter a description corresponding to the target to enter: ")
   routeTargetRunner <- readline("Enter the path where the target's runner file is hosted: ")
+  nameTargetRunner <- readline("Enter the target runner filename with file type: ")
   executablePathTarget <- readline("Enter the path of the target executable: ")
+  nameExecutableTarget <- readline("Enter the target executable filename with file type: ")
+  
+  
+  
+  #Add files to the file system
+  #Create folder
+  setwd("../Proyecto_titulo/FileSystem/Files/Target")
+  dir.create(targetName)
+  
+  
+  fileRoot <- getwd()
+  route <- paste(fileRoot, targetName, sep = "/") 
+  setwd(route)
+  
+  #add to target runner
+  file.copy(routeTargetRunner, route)
+  routeTargetRunner <- paste(route, nameTargetRunner, sep = "/") 
+  #add to path target
+  route <- paste(fileRoot, targetName, sep = "/")
+  file.copy(executablePathTarget, route) 
+  executablePathTarget <- paste(route, nameExecutableTarget, sep = "/") 
+  
+  setwd("../../..")
   
   #Add data to the file system
-  
   targetData <- list(targetName, targetDescription, routeTargetRunner, executablePathTarget)
-  
   setwd("../Proyecto_titulo/FileSystem")
   write.table(targetData, file = "Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   setwd("..")
   
-  
-  #Add files to the file system
 }
 
 #Argument to list
