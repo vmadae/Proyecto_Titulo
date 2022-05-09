@@ -99,19 +99,115 @@ if(args$add_target){
 #add parameters
 if(args$add_parameters){
   #Request data from the user
+  parametersName <- readline("Enter the name of the parameter to add: ")
+  targetAlgorithm <- readline("Enter the target algorithm to use: ")
+  parameters <- readline("Archivo de texto que lista parametros que irace debe configurar .txt: ")
+  nameParameters <- readline("Ingresar nombre del archivo de parametro con el .txt: ")
+  typeParameters <- readline("Enter the type of parameter: ")
+  forbidden <- readline("Archivo de texto que lista combinaciones prohibidas de valores de parametros .txt (opcional): ")
+  nameForbidden <- readline("Ingrese el nombre del archivo forbiden incluyendo .txt:" )
+  initial <- readline("Archivo de texto que provee configuraciones para iniciar la busqueda en irace (opcional) .txt: ")
+  nameInitial <- readline("Ingrese el nombre de initial con el .txt")
   
+  #Add files to the file system
+  #Create folder
+  setwd("../Proyecto_titulo/FileSystem/Files/Parameters")
+  dir.create(parametersName)
+  
+  fileRoot <- getwd()
+  route <- paste(fileRoot, parametersName, sep = "/") 
+  setwd(route)
+  
+  #add to parameters file
+  file.copy(parameters, route)
+  parameters <- paste(route, nameParameters, sep = "/")
+  #add to forbidden file
+  file.copy(forbidden, route)
+  forbidden <- paste(route, nameForbidden, sep = "/")
+  #add to initial file
+  file.copy(initial, route)
+  initial <- paste(route, nameInitial, sep = "/")
+  
+  setwd("../../../..")
+  
+  routeFile <- route
+  
+  #Add data to the file system
+  parameterData <- list(parametersName, targetAlgorithm, parameters, typeParameters, forbidden, initial, routeFile)
+  setwd("../Proyecto_titulo/FileSystem")
+  write.table(parameterData, file = "Parameters.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  setwd("..")
 }
 
 #add instances
 if(args$add_instances){
   #Request data from the user
+  instanceName <- readline("Enter the instance name to add: " )
+  instanceDescription <- readline("Enter the instance description to add: " )
+  instanceTraining <- readline("Enter the instance training to add: " )
+  instanceNumberTraining <- readline("Enter the instance number of the training to add: " )
+  instanceTesting <- readline("Enter the instance testing to add: " )
+  instanceNumberTesting <- readline("Enter the number of the testing to add: " )
+  instanceRouteTraining <- readline("Enter the route of the instance training to add: " )
+  instanceRouteTrainingName <- readline("Enter the route of the instance training name to add: ")
+  instanceRouteTesting <- readline("Enter the route of the instance testing to add: " )
+  instanceRouteTestingName <-readline("Enter the route of the instance testing name to add: ")
   
+  #Add files to the file system
+  #Create folder
+  setwd("../Proyecto_titulo/FileSystem/Files/Instances")
+  dir.create(instanceName) 
+  
+  fileRoot <- getwd()
+  route <- paste(fileRoot, instanceName, sep = "/") 
+  setwd(route)
+  
+  #add to instance training 
+  file.copy(instanceRouteTraining, route)
+  instanceRouteTraining <- paste(route, instanceRouteTrainingName, sep = "/")
+  #add to instance testing
+  file.copy(instanceRouteTesting, route)
+  instanceRouteTesting <- paste(route, instanceRouteTestingName, sep = "/")
+  
+  setwd("../../../..")
+  
+  #Add data to the file system
+  instanceData <- list(instanceName, instanceDescription, instanceTraining, instanceNumberTraining, instanceTesting, instanceNumberTesting, instanceRouteTraining, instanceRouteTesting)
+  setwd("../Proyecto_titulo/FileSystem")
+  write.table(instanceData, file = "Instances.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  setwd("..")
 }
 
 #add scenario
 if(args$add_scenario){
   #Request data from the user
+  scenarioName <- readline("Enter the name of scenario to add: ")
+  parameterSpace <- readline("Enter the space parameter for the scenario: ")
+  setInstances <- readline("Enter the set of instances for the scenario: ")
+  optionsRoute <- readline("Enter the options rout for the scenario (archivo .txt): ")
+  nameOptionFile <- readline("Ingresar el nombre del archivo con junto a la terminacion .txt")
+  scenarioType <- readline("Enter the type of the scenario: ")
   
+  #Add files to the file system
+  #Create folder
+  setwd("../Proyecto_titulo/FileSystem/Files/Scenario")
+  dir.create(scenarioName)
+  
+  fileRoot <- getwd()
+  route <- paste(fileRoot, scenarioName, sep = "/") 
+  setwd(route)
+  
+  #add to option route 
+  file.copy(optionsRoute, route)
+  optionsRoute <- paste(route, nameOptionFile, sep = "/")
+  
+  setwd("../../../..")
+  
+  #Add data to the file system
+  scenarioData <- list(scenarioName, parameterSpace, setInstances, optionsRoute, scenarioType)
+  setwd("../Proyecto_titulo/FileSystem")
+  write.table(scenarioData, file = "Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  setwd("..")
 }
 
 #add version
