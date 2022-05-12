@@ -62,38 +62,70 @@ args <- parse_args(p)
 #add target
 if(args$add_target){
   #Request data from the user
-  targetName <- readline("Enter the name of the target algorithm to add: " )
-  targetDescription <- readline("Enter a description corresponding to the target to enter: ")
-  routeTargetRunner <- readline("Enter the path where the target's runner file is hosted: ")
-  nameTargetRunner <- readline("Enter the target runner filename with file type: ")
-  executablePathTarget <- readline("Enter the path of the target executable: ")
-  nameExecutableTarget <- readline("Enter the target executable filename with file type: ")
+  repeat{
+    cat('Enter the name of the target algorithm to add: ')
+    targetName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
+    print(checkFile)
+    
+    #Check if the file exists
+    if(!file.exists(checkFile)){
+      break
+    }
+    
+    print("The file you want to input already exists, please try again.")
+  }
+  
+  cat('Enter a description corresponding to the target to enter: ')
+  targetDescription <- readLines("stdin", n = 1)
+  
+  repeat{
+    cat('Enter the path where the target runner file is hosted: ')
+    routeTargetRunner <- scan('stdin', character(), n=1)
+    
+    #check if the file exists
+    if(file.exists(routeTargetRunner)){
+     break
+    }
+    
+    print("The file you entered does not exist, please try again")
+  }
+  
+  repeat{
+    cat('Enter the path of the target executable: ')
+    executablePathTarget <- scan('stdin', character(), n=1)
+    
+    #check if the file exists
+    if(file.exists(executablePathTarget)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again")
+  }
   
   #Add files to the file system
   #Create folder
-  setwd("../Proyecto_titulo/FileSystem/Files/Target")
-  dir.create(targetName)
+  route <- ("./FileSystem/Files/Target")
+  routeFile <- paste(route, targetName, sep = "/")
   
-  
-  fileRoot <- getwd()
-  route <- paste(fileRoot, targetName, sep = "/") 
-  setwd(route)
+  dir.create(routeFile)
   
   #add to target runner
-  file.copy(routeTargetRunner, route)
-  routeTargetRunner <- paste(route, nameTargetRunner, sep = "/") 
-  #add to path target
-  route <- paste(fileRoot, targetName, sep = "/")
-  file.copy(executablePathTarget, route) 
-  executablePathTarget <- paste(route, nameExecutableTarget, sep = "/") 
+  finalRouteTargetRunner <- paste(routeFile, targetName, sep = "/")
+  finalRouteTargetRunner <- paste(finalRouteTargetRunner, "runner", sep = "_")
+  file.copy(routeTargetRunner, finalRouteTargetRunner)
+  routeTargetRunner <- finalRouteTargetRunner
   
-  setwd("../../../..")
+  #add to executable path target
+  finalRouteExecutableTarget <- paste(routeFile, targetName, sep = "/")
+  finalRouteExecutableTarget <- paste(finalRouteExecutableTarget, "executable", sep = "_") ##VERIFICAR .C
+  file.copy(routeTargetRunner, finalRouteExecutableTarget)
+  executablePathTarget <- finalRouteExecutableTarget
   
   #Add data to the file system
   targetData <- list(targetName, targetDescription, routeTargetRunner, executablePathTarget)
-  setwd("../Proyecto_titulo/FileSystem")
-  write.table(targetData, file = "Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-  setwd("..")
+  write.table(targetData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
 }
 
 #add parameters
@@ -182,6 +214,7 @@ if(args$add_instances){
 if(args$add_scenario){
   #Request data from the user
   scenarioName <- readline("Enter the name of scenario to add: ")
+  scenarioDescription <- readline("Enter a description of the scenario to add")
   parameterSpace <- readline("Enter the space parameter for the scenario: ")
   setInstances <- readline("Enter the set of instances for the scenario: ")
   optionsRoute <- readline("Enter the options rout for the scenario (archivo .txt): ")
@@ -204,7 +237,7 @@ if(args$add_scenario){
   setwd("../../../..")
   
   #Add data to the file system
-  scenarioData <- list(scenarioName, parameterSpace, setInstances, optionsRoute, scenarioType)
+  scenarioData <- list(scenarioName, scenarioDescription, parameterSpace, setInstances, optionsRoute, scenarioType)
   setwd("../Proyecto_titulo/FileSystem")
   write.table(scenarioData, file = "Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   setwd("..")
@@ -299,5 +332,5 @@ if(args$list_iteration){
 }
 
 ###############################################################################################################
-#Argument to view
+#Argument to show (CAMBIAR ARGUMENTOS DE VIEW A SHOW)
 ###############################################################################################################
