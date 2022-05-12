@@ -39,6 +39,7 @@ p <- add_argument(p, short = "--ap", "--add_parameters", help="Add parameters", 
 p <- add_argument(p, short = "--ai", "--add_instances", help="Add instances", type="string", flag=TRUE)
 p <- add_argument(p, short = "--as", "--add_scenario", help="Add scenario", type="string", flag=TRUE)
 p <- add_argument(p, short = "--av", "--add_version", help="Add new version", type="string", flag=TRUE)
+p <- add_argument(p, short = "--ae", "--add_experiment", help= "Add experiment", type="string", flag=TRUE)
 
 #Argument to modificate
 p <- add_argument(p, short = "--mt", "--modify_target", help="Modify target", type="string", flag=TRUE)
@@ -67,7 +68,6 @@ if(args$add_target){
     targetName <- scan('stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
-    print(checkFile)
     
     #Check if the file exists
     if(!file.exists(checkFile)){
@@ -124,153 +124,453 @@ if(args$add_target){
   executablePathTarget <- finalRouteExecutableTarget
   
   #Add data to the file system
-  targetData <- list(targetName, targetDescription, routeTargetRunner, executablePathTarget)
+  targetData <- list(targetName, 
+                     targetDescription, 
+                     routeTargetRunner, 
+                     executablePathTarget)
   write.table(targetData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-}
+
+  print("The target has been entered successfully.")
+  }
 
 #add parameters
 if(args$add_parameters){
   #Request data from the user
-  parametersName <- readline("Enter the name of the parameter to add: ")
-  targetAlgorithm <- readline("Enter the target algorithm to use: ")
-  parameters <- readline("Archivo de texto que lista parametros que irace debe configurar .txt: ")
-  nameParameters <- readline("Ingresar nombre del archivo de parametro con el .txt: ")
-  typeParameters <- readline("Enter the type of parameter: ")
-  forbidden <- readline("Archivo de texto que lista combinaciones prohibidas de valores de parametros .txt (opcional): ")
-  nameForbidden <- readline("Ingrese el nombre del archivo forbiden incluyendo .txt:" )
-  initial <- readline("Archivo de texto que provee configuraciones para iniciar la busqueda en irace (opcional) .txt: ")
-  nameInitial <- readline("Ingrese el nombre de initial con el .txt")
+  repeat{
+    cat(('Enter the name of the parameter to add: '))
+    parametersName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Parameters", parametersName, sep = "/")
+    
+    #Check if the file exists
+    if(!file.exists(checkFile)){
+      break
+    }
+    
+    print("The file you want to input already exists, please try again.")
+  }
+  
+  cat(('Enter a description of the parameter you want to add: '))
+  parametersDescription <- readLines("stdin", n = 1)
+  
+  repeat{
+    cat(('Enter the target algorithm to use: '))
+    targetAlgorithm <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Target", targetAlgorithm, sep = "/")
+    
+    #Check if the file exists
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered target algorithm does not exist in the database, please enter or choose another.")
+  }
+  
+  repeat{
+    cat(('Archivo de texto que lista parametros que irace debe configurar .txt: '))
+    parameters <- scan('stdin', character(), n=1)
+    
+    if(file.exists(parameters)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again.")
+  }
+  
+  cat(('Enter the type of the parameter: '))
+  typeParameters <- scan('stdin', character(), n=1)
+  
+  repeat{
+    cat(('Archivo de texto que lista combinaciones prohibidas de valores de parametros .txt (opcional): '))
+    forbidden <- scan('stdin', character(), n=1)
+    
+    #Check if the file exists
+    if(file.exists(forbidden)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again.")
+  }
+  
+  repeat{
+    cat(('Archivo de texto que provee configuraciones para iniciar la busqueda en irace (opcional) .txt: '))
+    initial <- scan('stdin', character(), n=1)
+    
+    #Check if the file exists
+    if(file.exists(initial)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again.")
+  }
   
   #Add files to the file system
   #Create folder
-  setwd("../Proyecto_titulo/FileSystem/Files/Parameters")
-  dir.create(parametersName)
+  route <- ("./FileSystem/Files/Parameters")
+  routeFile <- paste(route, parametersName, sep = "/")
   
-  fileRoot <- getwd()
-  route <- paste(fileRoot, parametersName, sep = "/") 
-  setwd(route)
+  dir.create(routeFile)
   
   #add to parameters file
-  file.copy(parameters, route)
-  parameters <- paste(route, nameParameters, sep = "/")
+  finalRouteParameters <- paste(routeFile, parametersName, sep = "/")
+  finalRouteParameters <- paste(finalRouteParameters, "parameters.txt", sep = "_")
+  
+  file.copy(parameters, finalRouteParameters)
+  parameters <- finalRouteParameters
+  
   #add to forbidden file
-  file.copy(forbidden, route)
-  forbidden <- paste(route, nameForbidden, sep = "/")
+  finalRouteForbidden <- paste(routeFile, parametersName, sep = "/")
+  finalRouteForbidden <- paste(finalRouteForbidden, "forbidden.txt", sep = "_")
+  
+  file.copy(forbidden, finalRouteForbidden)
+  forbidden <- finalRouteForbidden
+  
   #add to initial file
-  file.copy(initial, route)
-  initial <- paste(route, nameInitial, sep = "/")
+  finalRouteInitial <- paste(routeFile, parametersName, sep = "/")
+  finalRouteInitial <- paste(finalRouteInitial, "initial.txt", sep = "_")
   
-  setwd("../../../..")
-  
-  routeFile <- route
+  file.copy(initial, finalRouteInitial)
+  initial <- finalRouteInitial
   
   #Add data to the file system
-  parameterData <- list(parametersName, targetAlgorithm, parameters, typeParameters, forbidden, initial, routeFile)
-  setwd("../Proyecto_titulo/FileSystem")
-  write.table(parameterData, file = "Parameters.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-  setwd("..")
+  parameterData <- list(parametersName, 
+                        parametersDescription, 
+                        targetAlgorithm, 
+                        parameters, 
+                        typeParameters, 
+                        forbidden, 
+                        initial, 
+                        routeFile)
+  write.table(parameterData, file = "./FileSystem/Parameters.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  print("The parameter has been added successfully.")
 }
 
 #add instances
 if(args$add_instances){
   #Request data from the user
-  instanceName <- readline("Enter the instance name to add: " )
-  instanceDescription <- readline("Enter the instance description to add: " )
-  instanceTraining <- readline("Enter the instance training to add: " )
-  instanceNumberTraining <- readline("Enter the instance number of the training to add: " )
-  instanceTesting <- readline("Enter the instance testing to add: " )
-  instanceNumberTesting <- readline("Enter the number of the testing to add: " )
-  instanceRouteTraining <- readline("Enter the route of the instance training to add: " )
-  instanceRouteTrainingName <- readline("Enter the route of the instance training name to add: ")
-  instanceRouteTesting <- readline("Enter the route of the instance testing to add: " )
-  instanceRouteTestingName <-readline("Enter the route of the instance testing name to add: ")
+  repeat{
+    cat(('Enter the instance name to add: '))
+    instanceName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
+    
+    #Check if the file exists
+    if(!file.exists(checkFile)){
+      break
+    }
+    
+    print("The file you want to input already exists, please try again.")
+  }
+  
+  cat(('Enter the instance description to add: '))
+  instanceDescription <- readLines("stdin", n = 1)
+  
+  repeat{
+    cat(('Enter the instance training to add: '))
+    instanceTraining <- scan('stdin', character(), n=1)
+    
+    if(file.exists(instanceTraining)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again")
+  }
+  
+  repeat{
+    cat(('Enter the instance number of the training to add: '))
+    instanceNumberTraining <- scan('stdin', character(), n=1)
+    
+    if(file.exists(instanceNumberTraining)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again")
+  }
+  
+  repeat{
+    cat(('Enter the instance testing to add: '))
+    instanceTesting <- scan('stdin', character(), n=1)
+    
+    if(file.exists(instanceTesting)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again")
+  }
+  
+  repeat{
+    cat(('Enter the number of the testing to add: '))
+    instanceNumberTesting <- scan('stdin', character(), n=1)
+    
+    if(file.exists(instanceNumberTesting)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again")
+  }
   
   #Add files to the file system
   #Create folder
-  setwd("../Proyecto_titulo/FileSystem/Files/Instances")
-  dir.create(instanceName) 
+  route <- ("./FileSystem/Files/Instances")
+  routeFile <- paste(route, instanceName, sep = "/")
   
-  fileRoot <- getwd()
-  route <- paste(fileRoot, instanceName, sep = "/") 
-  setwd(route)
+  dir.create(routeFile) 
   
   #add to instance training 
-  file.copy(instanceRouteTraining, route)
-  instanceRouteTraining <- paste(route, instanceRouteTrainingName, sep = "/")
-  #add to instance testing
-  file.copy(instanceRouteTesting, route)
-  instanceRouteTesting <- paste(route, instanceRouteTestingName, sep = "/")
+  instanceRouteTraining <- paste(routeFile, "training", sep = "_")
   
-  setwd("../../../..")
+  dir.create(instanceRouteTraining)
+  
+  #add to set training
+  finalRouteSetTraining <- paste(instanceRouteTraining, instanceName, sep = "/")
+  finalRouteSetTraining <- paste(finalRouteSetTraining, "training.txt", sep = "_")
+  
+  file.copy(instanceTraining, finalRouteSetTraining)
+  
+  instanceTraining <- finalRouteSetTraining
+  
+  #add to set #training
+  finalRouteNumTraining <- paste(instanceRouteTraining, instanceName, sep = "/")
+  finalRouteNumTraining <- paste(finalRouteNumTraining, "numtraining.txt", sep = "_")
+  
+  file.copy(instanceNumberTraining, finalRouteNumTraining)
+  
+  instanceNumberTraining <- finalRouteNumTraining
+  
+  #add to instance testing
+  instanceRouteTesting <- paste(routeFile, "testing", sep = "_")
+  
+  dir.create(instanceRouteTesting)
+  
+  #add to set testing
+  finalRouteSetTesting <- paste(instanceRouteTesting, instanceName, sep = "/")
+  finalRouteSetTesting <- paste(finalRouteSetTesting, "testing.txt", sep = "_")
+  
+  file.copy(instanceTesting, finalRouteSetTesting)
+  
+  instanceTesting <- finalRouteSetTesting
+  
+  #add to set #testing
+  finalRouteNumTesting <- paste(instanceRouteTesting, instanceName, sep = "/")
+  finalRouteNumTesting <- paste(finalRouteNumTesting, "numtesting.txt", sep = "_")
+  
+  file.copy(instanceNumberTesting, finalRouteNumTesting)
+  
+  instanceNumberTesting <- finalRouteNumTesting
   
   #Add data to the file system
-  instanceData <- list(instanceName, instanceDescription, instanceTraining, instanceNumberTraining, instanceTesting, instanceNumberTesting, instanceRouteTraining, instanceRouteTesting)
-  setwd("../Proyecto_titulo/FileSystem")
-  write.table(instanceData, file = "Instances.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-  setwd("..")
+  instanceData <- list(instanceName, 
+                       instanceDescription, 
+                       instanceTraining, 
+                       instanceNumberTraining, 
+                       instanceTesting, 
+                       instanceNumberTesting, 
+                       instanceRouteTraining, 
+                       instanceRouteTesting)
+  write.table(instanceData, file = "./FileSystem/Instances.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  print("The instance has been entered successfully.")
 }
 
 #add scenario
 if(args$add_scenario){
   #Request data from the user
-  scenarioName <- readline("Enter the name of scenario to add: ")
-  scenarioDescription <- readline("Enter a description of the scenario to add")
-  parameterSpace <- readline("Enter the space parameter for the scenario: ")
-  setInstances <- readline("Enter the set of instances for the scenario: ")
-  optionsRoute <- readline("Enter the options rout for the scenario (archivo .txt): ")
-  nameOptionFile <- readline("Ingresar el nombre del archivo con junto a la terminacion .txt")
-  scenarioType <- readline("Enter the type of the scenario: ")
+  repeat{
+    cat('Enter the name of scenario to add: ')
+    scenarioName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
+    
+    #Check if the file exists
+    if(!file.exists(checkFile)){
+      break
+    }
+    
+    print("The file name you want to input already exists, please try again.")
+  }
+  
+  cat('Enter the scenario description: ')
+  optionsRoute <- readLines("stdin", n = 1)
+  
+  repeat{
+    cat('Enter the space parameter for the scenario: ')
+    parameterSpace <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Parameters", parameterSpace, sep = "/")
+    
+    #Check if the file exists
+    if(file.exists(checkFile)){
+      print(file.exists(checkFile))
+      break
+    }
+    
+    print("The entered space parameter does not exist in the database, please enter or choose another.")
+  }
+  
+  repeat{
+    cat('Enter the set of instances for the scenario: ')
+    setInstances<- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Instances", setInstances, sep = "/")
+    
+    #Check if the file exists
+    if(file.exists(checkFile)){
+      print(file.exists(checkFile))
+      break
+    }
+    
+    print("The entered set of instances does not exist in the database, please enter or choose another.")
+  }
+  
+  repeat{
+    cat('Enter the option route for the scenario (.txt ): ')
+    optionsRoute <- scan('stdin', character(), n=1)
+    
+    #Check if the file exists
+    if(file.exists(optionsRoute)){
+      print(file.exists(optionsRoute))
+      break
+    }
+    
+    print("The entered option route does not exist in the file system, please try again.")
+  }
+  
+  cat('Enter the type of the scenario: ')
+  scenarioType <- readLines("stdin", n = 1)
   
   #Add files to the file system
   #Create folder
-  setwd("../Proyecto_titulo/FileSystem/Files/Scenario")
-  dir.create(scenarioName)
+  route <- './FileSystem/Files/Scenario'
+  routeFile <- paste(route, scenarioName, sep = "/")
   
-  fileRoot <- getwd()
-  route <- paste(fileRoot, scenarioName, sep = "/") 
-  setwd(route)
+  dir.create(routeFile,recursive = T)
   
   #add to option route 
-  file.copy(optionsRoute, route)
-  optionsRoute <- paste(route, nameOptionFile, sep = "/")
+  finalOptionRoute <- paste(routeFile,scenarioName,sep = "/")
+  finalOptionRoute <- paste(finalOptionRoute,'options.txt',sep = "_")
   
-  setwd("../../../..")
+  file.copy(optionsRoute, finalOptionRoute)
+  
+  optionsRoute <- finalOptionRoute
   
   #Add data to the file system
-  scenarioData <- list(scenarioName, scenarioDescription, parameterSpace, setInstances, optionsRoute, scenarioType)
-  setwd("../Proyecto_titulo/FileSystem")
-  write.table(scenarioData, file = "Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-  setwd("..")
+  scenarioData <- list(scenarioName, parameterSpace, setInstances, optionsRoute, scenarioType)
+  write.table(scenarioData, file = "./FileSystem/Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  print("The stage was added successfully.")
 }
 
 #add version
 if(args$add_version){
   #Request data from the user
-  versionNumber <- readline("Enter the version number of irace to add: " )
-  versionDescription <- readline("Enter a description corresponding to the version of irace to enter: ")
-  versionRoute <- readline("Enter the path where the irace version is located: ")
-  nameVersion <- readline("Enter the name with the file type of the version to add:: ")
+  repeat{
+    cat('Enter the version number of irace to add: ')
+    versionNumber <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
+    
+    #Check if the file exists
+    if(!file.exists(checkFile)){
+      break
+    }
+    
+    print("The version you want to enter already exists, please try again")
+  }
+  
+  cat('Enter a description corresponding to the version of irace to enter: ')
+  versionDescription <- readLines("stdin", n = 1)
+  
+  repeat{
+    cat('Enter the path where the irace version is located: ')
+    versionRoute <- scan('stdin', character(), n=1)
+    
+    #check if the file exists
+    if(file.exists(versionRoute)){
+      break
+    }
+    
+    print("The file you entered does not exist, please try again")
+  }
   
   #Add files to the file system
   #Create folder
-  setwd("../Proyecto_titulo/FileSystem/Files/Version")
-  dir.create(versionNumber)
+  route <- ("./FileSystem/Files/Version")
+  routeFile <- paste(route, versionNumber, sep = "/")
   
-  fileRoot <- getwd()
-  route <- paste(fileRoot, versionNumber, sep = "/") 
-  setwd(route)
+  dir.create(routeFile)
   
   #add to version 
-  file.copy(versionRoute, route)
-  versionRoute <- paste(route, nameVersion, sep = "/")
+  finalRouteVersion <- paste(routeFile, versionNumber, sep = "/")
   
-  setwd("../../../..")
+  file.copy(versionRoute, finalRouteVersion)
+  
+  versionRoute <- finalRouteVersion
   
   #Add data to the file system
-  versionData <- list(versionNumber, versionDescription, versionRoute)
-  setwd("../Proyecto_titulo/FileSystem")
-  write.table(versionData, file = "Version.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-  setwd("..")
+  versionData <- list(versionNumber, 
+                      versionDescription, 
+                      versionRoute)
+  write.table(versionData, file = "./FileSystem/Version.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  print("La versión se ha introducido correctamente.")
+}
+
+#add experiment
+if(args$add_experiment){
+  #Request data from the user
+  repeat{
+    cat('Enter the name of the experiment to add: ')
+    experimentName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
+    
+    #Check if the file exists
+    if(!file.exists(checkFile)){
+      break
+    }
+    
+    print("The file you want to input already exists, please try again.")
+  }
+  
+  cat('Enter a description corresponding to the experiment to enter: ')
+  experimentDescription <- readLines("stdin", n = 1)
+  
+  repeat{
+    cat('Enter the scenario to use in the experiment: ')
+    scenarioName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
+    
+    #Check if the file exists
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The scenario entered does not exist, try entering another")
+  }
+  
+  numRepeticiones <- 0
+  
+  resultados <- ""
+  
+  settings <- ""
+  
+  statusExperiment <- "created"
+  
+  experimentPath <- ""
+  
+  #Add data to the file system
+  targetData <- list(experimentName, 
+                     experimentDescription, 
+                     scenarioName, 
+                     numRepeticiones, 
+                     resultados, 
+                     settings, 
+                     statusExperiment, 
+                     experimentPath)
+  write.table(targetData, file = "./FileSystem/Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
 }
 
 ###############################################################################################################
@@ -289,10 +589,10 @@ if(args$list_scenario){
 #list target
 if(args$list_target){
   fileRoot <- getwd()
-  subDir <- "/FileSystem/Target.txt"
+  subDir <- "./FileSystem/Target.txt"
   route <- paste(fileRoot, subDir, sep = "")
   fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
-  print(fileData)
+  print(fileData[, 1:2])
 }
 
 #list parameters
