@@ -630,8 +630,30 @@ if(args$list_iteration){
 ###############################################################################################################
 
 #show scenario
+if(args$show_scenario){
+  repeat{
+    cat('Enter the scenario to display: ')
+    scenarioName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered scenario does not exist, please try another.")
+  }
+  
+  subDir <- "./FileSystem/Scenario.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Name == scenarioName)
+  print(x)
+}
+
 #show target
-if(args$show_target){###EN CONSTRUCCION
+if(args$show_target){
   repeat{
     cat('Enter the target algorithm to display: ')
     targetName <- scan('stdin', character(), n=1)
@@ -649,8 +671,29 @@ if(args$show_target){###EN CONSTRUCCION
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
-  fileData <- subset.data.frame(fileData, select = targetName)
+  x <- subset(fileData, Name == targetName)
+  print(x)
+}
+
+#show version
+if(args$show_version){
+  repeat{
+    cat('Enter the version to display: ')
+    versionNumber <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered version does not exist, please try another.")
+  }
   
-  print(fileData)
+  subDir <- "./FileSystem/Version.txt"
   
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Name == versionNumber)
+  print(x)
 }
