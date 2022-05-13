@@ -1,2 +1,2 @@
-Name,Description,Training,#training,Testing,#testing,Route-training,Route-testing
+Name,Description,Training,#training,Testing,#testing,RouteTraining,RouteTesting
 Prueba,Prueba,Prueba,Prueba,Prueba,Prueba,Prueba,Prueba

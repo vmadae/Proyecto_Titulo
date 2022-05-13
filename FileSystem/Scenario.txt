@@ -1,2 +1,2 @@
-name,description,parameter-space,set-of-instances,route-options,type
+Name,Description,Parameter-space,Set-of-instances,Route-options,Type
 prueba,prueba,prueba,prueba,prueba,prueba

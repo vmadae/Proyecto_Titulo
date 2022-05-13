@@ -11,42 +11,42 @@ p <- arg_parser("Help")
 
 #Arguments to list
 
-p <- add_argument(p, short = "--ls", "--list_scenario", help="List all scenarios in the system", flag=TRUE)
-p <- add_argument(p, short = "--lt", "--list_target", help="List all target algorithms", type="string", flag=TRUE)
-p <- add_argument(p, short = "--lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
-p <- add_argument(p, short = "--li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
-p <- add_argument(p, short = "--lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
-p <- add_argument(p, short = "--lb", "--list_iteration", help="List all registered tests", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ls", "--list_scenario", help="List all scenarios in the system", flag=TRUE)
+p <- add_argument(p, short = "-lt", "--list_target", help="List all target algorithms", type="string", flag=TRUE)
+p <- add_argument(p, short = "-lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
+p <- add_argument(p, short = "-li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
+p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
+p <- add_argument(p, short = "-lb", "--list_iteration", help="List all registered tests", type="string", flag=TRUE)
 
 #Arguments to display
-p <- add_argument(p, short = "--vs", "--view_scenario", help="Show details of a scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "--vt", "--view_target", help="Show the detail of a target algorithm", type="string", flag=TRUE)
-p <- add_argument(p, short = "--vp", "--view_parameters", help="Show the detail of a set of parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "--vi", "--view_instances", help="Show the detail of a set of instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "--vv", "--view_version", help="Show version details", type="string", flag=TRUE)
-p <- add_argument(p, short = "--vb", "--view_test", help="Show test details", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=TRUE)
+p <- add_argument(p, short = "-sp", "--show_parameters", help="Show the detail of a set of parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-si", "--show_instances", help="Show the detail of a set of instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
+p <- add_argument(p, short = "-sb", "--show_test", help="Show test details", type="string", flag=TRUE)
 
 #Argument to see results
-p <- add_argument(p, short = "--r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
+p <- add_argument(p, short = "-r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
 
 #Arguments to test
-p <- add_argument(p, short = "--ab", "--add_test", help="Create a test, add: 1.Name 2.Description 3.Irace version 4.Scenarios and their repetitions", type="string", flag=TRUE)
-p <- add_argument(p, short = "--xb", "--execute_test", help="Run a test", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ab", "--add_test", help="Create a test, add: 1.Name 2.Description 3.Irace version 4.Scenarios and their repetitions", type="string", flag=TRUE)
+p <- add_argument(p, short = "-xb", "--execute_test", help="Run a test", type="string", flag=TRUE)
 
 #Arguments to add
-p <- add_argument(p, short = "--at", "--add_target", help="Add target", type="string", flag=TRUE)
-p <- add_argument(p, short = "--ap", "--add_parameters", help="Add parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "--ai", "--add_instances", help="Add instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "--as", "--add_scenario", help="Add scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "--av", "--add_version", help="Add new version", type="string", flag=TRUE)
-p <- add_argument(p, short = "--ae", "--add_experiment", help= "Add experiment", type="string", flag=TRUE)
+p <- add_argument(p, short = "-at", "--add_target", help="Add target", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ap", "--add_parameters", help="Add parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ai", "--add_instances", help="Add instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-as", "--add_scenario", help="Add scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-av", "--add_version", help="Add new version", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ae", "--add_experiment", help= "Add experiment", type="string", flag=TRUE)
 
 #Argument to modificate
-p <- add_argument(p, short = "--mt", "--modify_target", help="Modify target", type="string", flag=TRUE)
-p <- add_argument(p, short = "--mp", "--modify_parameters", help="Modify parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "--mi", "--modify_instances", help="Modify instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "--ms", "--modify_scenario", help="Modify scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "--mv", "--modify_version", help="Modify version", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mt", "--modify_target", help="Modify target", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mp", "--modify_parameters", help="Modify parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mi", "--modify_instances", help="Modify instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ms", "--modify_scenario", help="Modify scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mv", "--modify_version", help="Modify version", type="string", flag=TRUE)
 
 #Arguments to create website
 p <- add_argument(p, "--web", help="Generate website in shiny", type="string", flag=TRUE)
@@ -109,7 +109,7 @@ if(args$add_target){
   route <- ("./FileSystem/Files/Target")
   routeFile <- paste(route, targetName, sep = "/")
   
-  dir.create(routeFile)
+  dir.create(routeFile, recursive = T)
   
   #add to target runner
   finalRouteTargetRunner <- paste(routeFile, targetName, sep = "/")
@@ -210,7 +210,7 @@ if(args$add_parameters){
   route <- ("./FileSystem/Files/Parameters")
   routeFile <- paste(route, parametersName, sep = "/")
   
-  dir.create(routeFile)
+  dir.create(routeFile, recursive = T)
   
   #add to parameters file
   finalRouteParameters <- paste(routeFile, parametersName, sep = "/")
@@ -316,12 +316,12 @@ if(args$add_instances){
   route <- ("./FileSystem/Files/Instances")
   routeFile <- paste(route, instanceName, sep = "/")
   
-  dir.create(routeFile) 
+  dir.create(routeFile, recursive = T) 
   
   #add to instance training 
   instanceRouteTraining <- paste(routeFile, "training", sep = "_")
   
-  dir.create(instanceRouteTraining)
+  dir.create(instanceRouteTraining, recursive = T)
   
   #add to set training
   finalRouteSetTraining <- paste(instanceRouteTraining, instanceName, sep = "/")
@@ -342,7 +342,7 @@ if(args$add_instances){
   #add to instance testing
   instanceRouteTesting <- paste(routeFile, "testing", sep = "_")
   
-  dir.create(instanceRouteTesting)
+  dir.create(instanceRouteTesting, recursive = T)
   
   #add to set testing
   finalRouteSetTesting <- paste(instanceRouteTesting, instanceName, sep = "/")
@@ -456,7 +456,11 @@ if(args$add_scenario){
   optionsRoute <- finalOptionRoute
   
   #Add data to the file system
-  scenarioData <- list(scenarioName, parameterSpace, setInstances, optionsRoute, scenarioType)
+  scenarioData <- list(scenarioName, 
+                       parameterSpace, 
+                       setInstances, 
+                       optionsRoute, 
+                       scenarioType)
   write.table(scenarioData, file = "./FileSystem/Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
   print("The stage was added successfully.")
@@ -499,7 +503,7 @@ if(args$add_version){
   route <- ("./FileSystem/Files/Version")
   routeFile <- paste(route, versionNumber, sep = "/")
   
-  dir.create(routeFile)
+  dir.create(routeFile, recursive = T)
   
   #add to version 
   finalRouteVersion <- paste(routeFile, versionNumber, sep = "/")
@@ -583,54 +587,70 @@ if(args$list_scenario){
   subDir <- "/FileSystem/Scenario.txt"
   route <- paste(fileRoot, subDir, sep = "")
   fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
-  print(fileData)
+  print(fileData[, c(1,2,6)])
 }
 
 #list target
 if(args$list_target){
-  fileRoot <- getwd()
   subDir <- "./FileSystem/Target.txt"
-  route <- paste(fileRoot, subDir, sep = "")
-  fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   print(fileData[, 1:2])
 }
 
 #list parameters
 if(args$list_parameters){
-  fileRoot <- getwd()
-  subDir <- "/FileSystem/Parameters.txt"
-  route <- paste(fileRoot, subDir, sep = "")
-  fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
-  print(fileData)
+  subDir <- "./FileSystem/Parameters.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  print(fileData[, 1:3])
 }
 
 #list instances
 if(args$list_instances){
-  fileRoot <- getwd()
-  subDir <- "/FileSystem/Instances.txt"
-  route <- paste(fileRoot, subDir, sep = "")
-  fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
-  print(fileData)
+  subDir <- ("./FileSystem/Instances.txt")
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  print(fileData[, 1:2])
 }
 
 #list versions
 if(args$list_versions){
-  fileRoot <- getwd()
-  subDir <- "/FileSystem/Version.txt"
-  route <- paste(fileRoot, subDir, sep = "")
-  fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
-  print(fileData)
+  subDir <- "./FileSystem/Version.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  print(fileData[, 1:2])
 }
 
 #list iteration
 if(args$list_iteration){
-  fileRoot <- getwd()
-  subDir <- "/FileSystem/Iteration.txt"
-  route <- paste(fileRoot, subDir, sep = "")
-  fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
-  print(fileData)
+  subDir <- "./FileSystem/Iteration.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  print(fileData[, 1:2])
 }
 
 ###############################################################################################################
-#Argument to show (CAMBIAR ARGUMENTOS DE VIEW A SHOW)
+#Argument to show
 ###############################################################################################################
+
+#show scenario
+#show target
+if(args$show_target){###EN CONSTRUCCION
+  repeat{
+    cat('Enter the target algorithm to display: ')
+    targetName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered target does not exist, please try another.")
+  }
+  
+  subDir <- "./FileSystem/Target.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  fileData <- subset.data.frame(fileData, select = targetName)
+  
+  print(fileData)
+  
+}
