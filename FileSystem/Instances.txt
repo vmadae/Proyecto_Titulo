@@ -1,2 +1,2 @@
 Name,Description,Training,#training,Testing,#testing,RouteTraining,RouteTesting
-Prueba,Prueba,Prueba,Prueba,Prueba,Prueba,Prueba,Prueba
+"Prueba1","Prueba 1 de instancias","./FileSystem/Files/Instances/Prueba1/Prueba1_training/Prueba1_training.txt","./FileSystem/Files/Instances/Prueba1/Prueba1_training/Prueba1_numtraining.txt","./FileSystem/Files/Instances/Prueba1/Prueba1_testing/Prueba1_testing.txt","./FileSystem/Files/Instances/Prueba1/Prueba1_testing/Prueba1_numtesting.txt","./FileSystem/Files/Instances/Prueba1/Prueba1_training","./FileSystem/Files/Instances/Prueba1/Prueba1_testing"

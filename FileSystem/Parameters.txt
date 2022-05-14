@@ -1,2 +1,2 @@
 Name,Description,Target-algorithm,#Parameters,Type,Forbidden,Initial,File-path
-Prueba,Prueba,Prueba,Prueba,Prueba,Prueba,Prueba,Prueba
+"Prueba1","Prueba numero 1 de a¤adir parametro","Prueba1","./FileSystem/Files/Parameters/Prueba1/Prueba1_parameters.txt","prueba","./FileSystem/Files/Parameters/Prueba1/Prueba1_forbidden.txt","./FileSystem/Files/Parameters/Prueba1/Prueba1_initial.txt","./FileSystem/Files/Parameters/Prueba1"

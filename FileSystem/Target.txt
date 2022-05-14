@@ -1,3 +1,2 @@
 Name,Description,Target-runner-route,Executable-path
-"acotsp","prueba de acotsp numero 1001","./FileSystem/Files/Target/acotsp/acotsp","./FileSystem/Files/Target/acotsp/acotsp.c"
-"acotsp1","funciona el no duplicar archivos","./FileSystem/Files/Target/acotsp1/acotsp1","./FileSystem/Files/Target/acotsp1/acotsp1.c"
+"Prueba1","Prueba del ingreso de target","./FileSystem/Files/Target/Prueba1/Prueba1_runner","./FileSystem/Files/Target/Prueba1/Prueba1_executable"

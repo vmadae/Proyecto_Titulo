@@ -16,7 +16,7 @@ p <- add_argument(p, short = "-lt", "--list_target", help="List all target algor
 p <- add_argument(p, short = "-lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
 p <- add_argument(p, short = "-li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
 p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
-p <- add_argument(p, short = "-lb", "--list_iteration", help="List all registered tests", type="string", flag=TRUE)
+p <- add_argument(p, short = "-lb", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
 
 #Arguments to display
 p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
@@ -319,8 +319,8 @@ if(args$add_instances){
   dir.create(routeFile, recursive = T) 
   
   #add to instance training 
+  routeFile <- paste(routeFile, instanceName, sep = "/")
   instanceRouteTraining <- paste(routeFile, "training", sep = "_")
-  
   dir.create(instanceRouteTraining, recursive = T)
   
   #add to set training
@@ -392,7 +392,7 @@ if(args$add_scenario){
   }
   
   cat('Enter the scenario description: ')
-  optionsRoute <- readLines("stdin", n = 1)
+  scenarioDescription <- readLines("stdin", n = 1)
   
   repeat{
     cat('Enter the space parameter for the scenario: ')
@@ -456,7 +456,8 @@ if(args$add_scenario){
   optionsRoute <- finalOptionRoute
   
   #Add data to the file system
-  scenarioData <- list(scenarioName, 
+  scenarioData <- list(scenarioName,
+                       scenarioDescription,
                        parameterSpace, 
                        setInstances, 
                        optionsRoute, 
@@ -565,6 +566,13 @@ if(args$add_experiment){
   
   experimentPath <- ""
   
+  #Add files to the file system
+  #Create folder
+  route <- ("./FileSystem/Files/Experiment")
+  routeFile <- paste(route, experimentName, sep = "/")
+  
+  dir.create(routeFile, recursive = T)
+  
   #Add data to the file system
   targetData <- list(experimentName, 
                      experimentDescription, 
@@ -574,7 +582,7 @@ if(args$add_experiment){
                      settings, 
                      statusExperiment, 
                      experimentPath)
-  write.table(targetData, file = "./FileSystem/Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  write.table(targetData, file = "./FileSystem/Experiment.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
 }
 
 ###############################################################################################################
@@ -618,9 +626,9 @@ if(args$list_versions){
   print(fileData[, 1:2])
 }
 
-#list iteration
-if(args$list_iteration){
-  subDir <- "./FileSystem/Iteration.txt"
+#list experiment
+if(args$list_experiment){
+  subDir <- "./FileSystem/Experiment.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   print(fileData[, 1:2])
 }
@@ -689,11 +697,11 @@ if(args$show_version){
     
     print("The entered version does not exist, please try another.")
   }
-  
+
   subDir <- "./FileSystem/Version.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
-  x <- subset(fileData, Name == versionNumber)
+  x <- subset(fileData, Version_Number == versionNumber)
   print(x)
 }
