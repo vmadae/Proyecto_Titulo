@@ -121,6 +121,7 @@ addParameter <- function(){
       if(opt != "Y" | opt != "N"){
         print("The option entered is not valid, please try again.")
       }
+      Sys.sleep(0.5)
     }
   }
   
@@ -373,6 +374,7 @@ addScenario <- function(){
       if(opt != "Y" | opt != "N"){
         print("The option entered is not valid, please try again.")
       }
+      Sys.sleep(0.5)
     }
   }
   
@@ -403,6 +405,7 @@ addScenario <- function(){
       if(opt != "Y" | opt != "N"){
         print("The option entered is not valid, please try again.")
       }
+      Sys.sleep(0.5)
     }
   }
   
@@ -631,6 +634,7 @@ if(args$add_experiment){
       if(opt != "Y" | opt != "N"){
         print("The option entered is not valid, please try again.")
       }
+      Sys.sleep(0.5)
     }
   }
   
@@ -669,10 +673,8 @@ if(args$add_experiment){
 
 #list scenario
 if(args$list_scenario){
-  fileRoot <- getwd()
   subDir <- "/FileSystem/Scenario.txt"
-  route <- paste(fileRoot, subDir, sep = "")
-  fileData <- read.delim(file = route, header = TRUE, sep = ",", dec = ".")
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   print(fileData[, c(1,2,6)])
 }
 
@@ -882,6 +884,7 @@ if(args$modify_target){
     
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
     
+    #check if the entered target exists
     if(file.exists(checkFile)){
       break
     }
@@ -889,6 +892,57 @@ if(args$modify_target){
     print("The entered target does not exist, please try another.")
   }
   
+  #Select option to modify
+  repeat{
+    print("Enter the option corresponding to the element you want to modify.")
+    print("1. Name")
+    print("2. Description")
+    print("3. Target runner")
+    print("4. Executable")
+    
+    opt <- scan('stdin', integer(), n=1)
+    
+    if(opt == 1){
+      cat('Enter the new name for the target: ')
+      newNameTarget <- scan('stdin', character(), n=1)
+      
+      subDir <- "./FileSystem/Target.txt"
+      fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+      
+      fileData$Name[fileData$Name == targetName] <- newNameTarget
+      
+      print(fileData)
+      
+      file.remove("./FileSystem/Target.txt")
+      
+      fromPath <- paste("./FileSystem/Files/Target", targetName, sep = "/")
+      toPath <- paste("./FileSystem/Files/Target", newNameTarget, sep = "/")
+      
+      file.rename(fromPath, toPath)
+      
+      write.table(fileData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = TRUE, append = TRUE)
+      
+      break
+    }
+    if(opt == 2){
+      print("Se ingreso la opcion 2, se modifica la descripcion")
+      break
+    }
+    if(opt == 3){
+      print("Se ingreso la opcion 3, se modifica el target runner")
+      break
+    }
+    if(opt == 4){
+      print("Se ingreso la opcion 4, se medifica el ejecutable")
+      break
+    }
+    if(opt != 1 | opt != 2 | opt != 3 | opt != 4 ){
+      print("The option entered is not correct, please try again.")
+    }
+    
+    Sys.sleep(0.5)
+  }
+  print("The target has been successfully modified.")
 }
 
 #modify parameter
