@@ -1,67 +1,11 @@
 library(argparser, quietly=TRUE)
 library(readr)
 
-
 ###############################################################################################################
-#ADD COMMAND LINE ARGUMENTS
-###############################################################################################################
-
-# Create a parser
-p <- arg_parser("Help")
-
-#Arguments to list
-
-p <- add_argument(p, short = "-ls", "--list_scenario", help="List all scenarios in the system", flag=TRUE)
-p <- add_argument(p, short = "-lt", "--list_target", help="List all target algorithms", type="string", flag=TRUE)
-p <- add_argument(p, short = "-lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
-p <- add_argument(p, short = "-li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
-p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
-p <- add_argument(p, short = "-le", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
-
-#Arguments to show
-p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=TRUE)
-p <- add_argument(p, short = "-sp", "--show_parameter", help="Show the detail of a set of parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of a set of instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
-p <- add_argument(p, short = "-se", "--show_experiment", help="Show experiment details", type="string", flag=TRUE)
-
-#Argument to see results
-p <- add_argument(p, short = "-r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
-
-#Arguments to test
-p <- add_argument(p, short = "-ab", "--add_test", help="Create a test, add: 1.Name 2.Description 3.Irace version 4.Scenarios and their repetitions", type="string", flag=TRUE)
-p <- add_argument(p, short = "-xb", "--execute_test", help="Run a test", type="string", flag=TRUE)
-
-#Arguments to add
-p <- add_argument(p, short = "-at", "--add_target", help="Add target", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ap", "--add_parameter", help="Add parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ai", "--add_instances", help="Add instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "-as", "--add_scenario", help="Add scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "-av", "--add_version", help="Add new version", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ae", "--add_experiment", help= "Add experiment", type="string", flag=TRUE)
-
-#Argument to modificate
-p <- add_argument(p, short = "-mt", "--modify_target", help="Modify target", type="string", flag=TRUE)
-p <- add_argument(p, short = "-mp", "--modify_parameters", help="Modify parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "-mi", "--modify_instances", help="Modify instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ms", "--modify_scenario", help="Modify scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "-mv", "--modify_version", help="Modify version", type="string", flag=TRUE)
-
-#Arguments to create website
-p <- add_argument(p, "--web", help="Generate website in shiny", type="string", flag=TRUE)
-
-# Parse the command line arguments
-args <- parse_args(p)
-
-###############################################################################################################
-#FUNCTIONALITIES OF THE ARGUMENT
-###############################################################################################################
-#ARGUMENTS TO ADD
+#FUNCTIONS
 ###############################################################################################################
 
-#add target
-if(args$add_target){
+addTarget <- function(){
   #Request data from the user
   repeat{
     cat('Enter the name of the target algorithm to add: ')
@@ -86,7 +30,7 @@ if(args$add_target){
     
     #check if the file exists
     if(file.exists(routeTargetRunner)){
-     break
+      break
     }
     
     print("The file you entered does not exist, please try again")
@@ -129,12 +73,10 @@ if(args$add_target){
                      routeTargetRunner, 
                      executablePathTarget)
   write.table(targetData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+}
 
-  print("The target has been entered successfully.")
-  }
-
-#add parameters
-if(args$add_parameter){
+addParameter <- function(){
   #Request data from the user
   repeat{
     cat(('Enter the name of the parameter to add: '))
@@ -164,7 +106,22 @@ if(args$add_parameter){
       break
     }
     
-    print("The entered target algorithm does not exist in the database, please enter or choose another.")
+    repeat{
+      print("The entered target algorithm does not exist in the database, want to add it?")
+      print("Enter 'Y' to add or 'N' to try again.")
+      opt <- scan('stdin', character(), n=1)
+      
+      if(opt == "Y"){
+        addTarget()
+        break
+      }
+      if(opt == "N"){
+        break
+      }
+      if(opt != "Y" | opt != "N"){
+        print("The option entered is not valid, please try again.")
+      }
+    }
   }
   
   repeat{
@@ -243,12 +200,10 @@ if(args$add_parameter){
                         initial, 
                         routeFile)
   write.table(parameterData, file = "./FileSystem/Parameters.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-  
-  print("The parameter has been added successfully.")
+
 }
 
-#add instances
-if(args$add_instances){
+addInstance <- function(){
   #Request data from the user
   repeat{
     cat(('Enter the instance name to add: '))
@@ -370,12 +325,9 @@ if(args$add_instances){
                        instanceRouteTraining, 
                        instanceRouteTesting)
   write.table(instanceData, file = "./FileSystem/Instances.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-  
-  print("The instance has been entered successfully.")
 }
 
-#add scenario
-if(args$add_scenario){
+addScenario <- function(){
   #Request data from the user
   repeat{
     cat('Enter the name of scenario to add: ')
@@ -406,7 +358,22 @@ if(args$add_scenario){
       break
     }
     
-    print("The entered space parameter does not exist in the database, please enter or choose another.")
+    repeat{
+      print("The entered parameter does not exist in the database, want to add it?")
+      print("Enter 'Y' to add or 'N' to try again.")
+      opt <- scan('stdin', character(), n=1)
+      
+      if(opt == "Y"){
+        addTarget()
+        break
+      }
+      if(opt == "N"){
+        break
+      }
+      if(opt != "Y" | opt != "N"){
+        print("The option entered is not valid, please try again.")
+      }
+    }
   }
   
   repeat{
@@ -421,7 +388,22 @@ if(args$add_scenario){
       break
     }
     
-    print("The entered set of instances does not exist in the database, please enter or choose another.")
+    repeat{
+      print("The entered instances does not exist in the database, want to add it?")
+      print("Enter 'Y' to add or 'N' to try again.")
+      opt <- scan('stdin', character(), n=1)
+      
+      if(opt == "Y"){
+        addTarget()
+        break
+      }
+      if(opt == "N"){
+        break
+      }
+      if(opt != "Y" | opt != "N"){
+        print("The option entered is not valid, please try again.")
+      }
+    }
   }
   
   repeat{
@@ -464,6 +446,87 @@ if(args$add_scenario){
                        scenarioType)
   write.table(scenarioData, file = "./FileSystem/Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
+}
+
+###############################################################################################################
+#ADD COMMAND LINE ARGUMENTS
+###############################################################################################################
+
+# Create a parser
+p <- arg_parser("Help")
+
+#Arguments to list
+
+p <- add_argument(p, short = "-ls", "--list_scenario", help="List all scenarios in the system", flag=TRUE)
+p <- add_argument(p, short = "-lt", "--list_target", help="List all target algorithms", type="string", flag=TRUE)
+p <- add_argument(p, short = "-lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
+p <- add_argument(p, short = "-li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
+p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
+p <- add_argument(p, short = "-le", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
+
+#Arguments to show
+p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=TRUE)
+p <- add_argument(p, short = "-sp", "--show_parameter", help="Show the detail of a set of parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of a set of instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
+p <- add_argument(p, short = "-se", "--show_experiment", help="Show experiment details", type="string", flag=TRUE)
+
+#Argument to see results
+p <- add_argument(p, short = "-r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
+
+#Arguments to test
+p <- add_argument(p, short = "-ab", "--add_test", help="Create a test, add: 1.Name 2.Description 3.Irace version 4.Scenarios and their repetitions", type="string", flag=TRUE)
+p <- add_argument(p, short = "-xb", "--execute_test", help="Run a test", type="string", flag=TRUE)
+
+#Arguments to add
+p <- add_argument(p, short = "-at", "--add_target", help="Add target", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ap", "--add_parameter", help="Add parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ai", "--add_instances", help="Add instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-as", "--add_scenario", help="Add scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-av", "--add_version", help="Add new version", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ae", "--add_experiment", help= "Add experiment", type="string", flag=TRUE)
+
+#Argument to modificate
+p <- add_argument(p, short = "-mt", "--modify_target", help="Modify target", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mp", "--modify_parameter", help="Modify parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mi", "--modify_instance", help="Modify instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ms", "--modify_scenario", help="Modify scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mv", "--modify_version", help="Modify version", type="string", flag=TRUE)
+
+#Arguments to create website
+p <- add_argument(p, "--web", help="Generate website in shiny", type="string", flag=TRUE)
+
+# Parse the command line arguments
+args <- parse_args(p)
+
+###############################################################################################################
+#FUNCTIONALITIES OF THE ARGUMENT
+###############################################################################################################
+#ARGUMENTS TO ADD
+###############################################################################################################
+
+#add target
+if(args$add_target){
+  addTarget()
+  print("The target has been entered successfully.")
+}
+
+#add parameters
+if(args$add_parameter){
+  addParameter()
+  print("The parameter has been added successfully.")
+}
+
+#add instances
+if(args$add_instances){
+  addInstance()
+  print("The instance has been entered successfully.")
+}
+
+#add scenario
+if(args$add_scenario){
+  addScenario()
   print("The stage was added successfully.")
 }
 
@@ -553,7 +616,22 @@ if(args$add_experiment){
       break
     }
     
-    print("The scenario entered does not exist, try entering another")
+    repeat{
+      print("The entered scenario does not exist in the database, want to add it?")
+      print("Enter 'Y' to add or 'N' to try again.")
+      opt <- scan('stdin', character(), n=1)
+      
+      if(opt == "Y"){
+        addTarget()
+        break
+      }
+      if(opt == "N"){
+        break
+      }
+      if(opt != "Y" | opt != "N"){
+        print("The option entered is not valid, please try again.")
+      }
+    }
   }
   
   numRepeticiones <- 0
@@ -779,3 +857,87 @@ if(args$show_experiment){
 #ARGUMENTS TO MODIFY
 ###############################################################################################################
 
+#modify scenario
+if(args$modify_scenario){
+  repeat{
+    cat('Enter the scenario to modify: ')
+    scenarioName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered scenario does not exist, please try another.")
+  }
+  
+}
+
+#modify target
+if(args$modify_target){
+  repeat{
+    cat('Enter the target algorithm to modify: ')
+    targetName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered target does not exist, please try another.")
+  }
+  
+}
+
+#modify parameter
+if(args$modify_parameter){
+  repeat{
+    cat('Enter the parameter to modify: ')
+    parameterName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered parameter does not exist, please try another.")
+  }
+  
+}
+
+#modify instance
+if(args$modify_instance){
+  repeat{
+    cat('Enter the instance to modify: ')
+    instanceName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered instance does not exist, please try another.")
+  }
+  
+}
+
+#modify version
+if(args$modify_version){
+  repeat{
+    cat('Enter the version to modify: ')
+    versionNumber <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered version does not exist, please try another.")
+  }
+  
+}
