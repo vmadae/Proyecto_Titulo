@@ -3,7 +3,7 @@ library(readr)
 
 
 ###############################################################################################################
-# Add command line arguments
+#ADD COMMAND LINE ARGUMENTS
 ###############################################################################################################
 
 # Create a parser
@@ -16,15 +16,15 @@ p <- add_argument(p, short = "-lt", "--list_target", help="List all target algor
 p <- add_argument(p, short = "-lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
 p <- add_argument(p, short = "-li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
 p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
-p <- add_argument(p, short = "-lb", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
+p <- add_argument(p, short = "-le", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
 
-#Arguments to display
+#Arguments to show
 p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
 p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=TRUE)
-p <- add_argument(p, short = "-sp", "--show_parameters", help="Show the detail of a set of parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "-si", "--show_instances", help="Show the detail of a set of instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-sp", "--show_parameter", help="Show the detail of a set of parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of a set of instances", type="string", flag=TRUE)
 p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
-p <- add_argument(p, short = "-sb", "--show_test", help="Show test details", type="string", flag=TRUE)
+p <- add_argument(p, short = "-se", "--show_experiment", help="Show experiment details", type="string", flag=TRUE)
 
 #Argument to see results
 p <- add_argument(p, short = "-r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
@@ -35,7 +35,7 @@ p <- add_argument(p, short = "-xb", "--execute_test", help="Run a test", type="s
 
 #Arguments to add
 p <- add_argument(p, short = "-at", "--add_target", help="Add target", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ap", "--add_parameters", help="Add parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ap", "--add_parameter", help="Add parameters", type="string", flag=TRUE)
 p <- add_argument(p, short = "-ai", "--add_instances", help="Add instances", type="string", flag=TRUE)
 p <- add_argument(p, short = "-as", "--add_scenario", help="Add scenario", type="string", flag=TRUE)
 p <- add_argument(p, short = "-av", "--add_version", help="Add new version", type="string", flag=TRUE)
@@ -55,9 +55,9 @@ p <- add_argument(p, "--web", help="Generate website in shiny", type="string", f
 args <- parse_args(p)
 
 ###############################################################################################################
-#Functionality of argument
+#FUNCTIONALITIES OF THE ARGUMENT
 ###############################################################################################################
-#Argument to add
+#ARGUMENTS TO ADD
 ###############################################################################################################
 
 #add target
@@ -134,7 +134,7 @@ if(args$add_target){
   }
 
 #add parameters
-if(args$add_parameters){
+if(args$add_parameter){
   #Request data from the user
   repeat{
     cat(('Enter the name of the parameter to add: '))
@@ -586,7 +586,7 @@ if(args$add_experiment){
 }
 
 ###############################################################################################################
-#Argument to list
+#ARGUMENTS TO LIST
 ###############################################################################################################
 
 #list scenario
@@ -634,7 +634,7 @@ if(args$list_experiment){
 }
 
 ###############################################################################################################
-#Argument to show
+#ARGUMENTS TO SHOW
 ###############################################################################################################
 
 #show scenario
@@ -683,6 +683,52 @@ if(args$show_target){
   print(x)
 }
 
+#show parameter
+if(args$show_parameter){
+  repeat{
+    cat('Enter the parameter to display: ')
+    parameterName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered parameter does not exist, please try another.")
+  }
+  
+  subDir <- "./FileSystem/Parameters.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Name == parameterName)
+  print(x)
+}
+
+#show instance
+if(args$show_instance){
+  repeat{
+    cat('Enter the instance to display: ')
+    instanceName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered instance does not exist, please try another.")
+  }
+  
+  subDir <- "./FileSystem/Instances.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Name == instanceName)
+  print(x)
+}
+
 #show version
 if(args$show_version){
   repeat{
@@ -705,3 +751,31 @@ if(args$show_version){
   x <- subset(fileData, Version_Number == versionNumber)
   print(x)
 }
+
+#show experiment
+if(args$show_experiment){
+  repeat{
+    cat('Enter the experiment to display: ')
+    experimentName <- scan('stdin', character(), n=1)
+    
+    checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    print("The entered experiment does not exist, please try another.")
+  }
+  
+  subDir <- "./FileSystem/Experiment.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Test == experimentName)
+  print(x)
+}
+
+###############################################################################################################
+#ARGUMENTS TO MODIFY
+###############################################################################################################
+
