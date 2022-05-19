@@ -5,25 +5,28 @@ library(readr)
 #FUNCTIONS
 ###############################################################################################################
 
+#Function to add target
 addTarget <- function(){
   #Request data from the user
   repeat{
+    #The name of the target to be added is requested
     cat('Enter the name of the target algorithm to add: ')
     targetName <- scan('stdin', character(), n=1)
     
+    #check if the file exists
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
     
-    #Check if the file exists
     if(!file.exists(checkFile)){
       break
     }
-    
     print("The file you want to input already exists, please try again.")
   }
   
+  #The description of the target to be added is requested
   cat('Enter a description corresponding to the target to enter: ')
   targetDescription <- readLines("stdin", n = 1)
   
+  #The runner file of the target to be added is requested
   repeat{
     cat('Enter the path where the target runner file is hosted: ')
     routeTargetRunner <- scan('stdin', character(), n=1)
@@ -32,10 +35,10 @@ addTarget <- function(){
     if(file.exists(routeTargetRunner)){
       break
     }
-    
     print("The file you entered does not exist, please try again")
   }
   
+  #The executable file of the target to be added is requested
   repeat{
     cat('Enter the path of the target executable: ')
     executablePathTarget <- scan('stdin', character(), n=1)
@@ -44,24 +47,24 @@ addTarget <- function(){
     if(file.exists(executablePathTarget)){
       break
     }
-    
     print("The file you entered does not exist, please try again")
   }
   
   #Add files to the file system
-  #Create folder
+  #The route of the target with which you work is saved
   route <- ("./FileSystem/Files/Target")
   routeFile <- paste(route, targetName, sep = "/")
   
+  #Create folder
   dir.create(routeFile, recursive = T)
   
-  #add to target runner
+  #The target runner is saved in the system
   finalRouteTargetRunner <- paste(routeFile, targetName, sep = "/")
   finalRouteTargetRunner <- paste(finalRouteTargetRunner, "runner", sep = "_")
   file.copy(routeTargetRunner, finalRouteTargetRunner)
   routeTargetRunner <- finalRouteTargetRunner
   
-  #add to executable path target
+  #The executable is saved in the system
   finalRouteExecutableTarget <- paste(routeFile, targetName, sep = "/")
   finalRouteExecutableTarget <- paste(finalRouteExecutableTarget, "executable", sep = "_") ##VERIFICAR .C
   file.copy(routeTargetRunner, finalRouteExecutableTarget)
@@ -73,58 +76,68 @@ addTarget <- function(){
                      routeTargetRunner, 
                      executablePathTarget)
   write.table(targetData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
-  
 }
 
+#Function to add parameter
 addParameter <- function(){
   #Request data from the user
   repeat{
+    #The name of the parameter to be added is requested
     cat(('Enter the name of the parameter to add: '))
     parametersName <- scan('stdin', character(), n=1)
     
+    #Check if the file exists
     checkFile <- paste("./FileSystem/Files/Parameters", parametersName, sep = "/")
     
-    #Check if the file exists
     if(!file.exists(checkFile)){
       break
     }
-    
     print("The file you want to input already exists, please try again.")
   }
   
+  #The description of the parameter to be added is requested
   cat(('Enter a description of the parameter you want to add: '))
   parametersDescription <- readLines("stdin", n = 1)
   
+  #The target algorithm that will be used for the new parameter is requested
   repeat{
     cat(('Enter the target algorithm to use: '))
     targetAlgorithm <- scan('stdin', character(), n=1)
     
+    #Check if the file exists
     checkFile <- paste("./FileSystem/Files/Target", targetAlgorithm, sep = "/")
     
-    #Check if the file exists
     if(file.exists(checkFile)){
       break
     }
     
+    #If the target algorithm entered by the user is not found in the system, the user can add it or choose another
     repeat{
       print("The entered target algorithm does not exist in the database, want to add it?")
       print("Enter 'Y' to add or 'N' to try again.")
       opt <- scan('stdin', character(), n=1)
       
+      #Entering the "Y" option performs the add target function
       if(opt == "Y"){
         addTarget()
+        #si se añade el nuevo target se tiene que retornar la variable y guardar como nombre
+        #FALTA ->  se puede enviar un flag true cuando se desea retornar y false cuando no
+        #desntro del codigo de target al final se coloca un if si la flag es true retorna el nombre 
+        #del target creado
         break
       }
+      #Entering option "N" again prompts you to enter a target
       if(opt == "N"){
         break
       }
+      #If the user enters another undefined letter, it is indicated that the option entered is not valid and it is requested to enter the option again.
       if(opt != "Y" | opt != "N"){
         print("The option entered is not valid, please try again.")
       }
       Sys.sleep(0.5)
     }
   }
-  
+  #QUEDE ACA-------------------------------------------------------
   repeat{
     cat(('Archivo de texto que lista parametros que irace debe configurar .txt: '))
     parameters <- scan('stdin', character(), n=1)
@@ -204,6 +217,7 @@ addParameter <- function(){
 
 }
 
+#Function to add instance
 addInstance <- function(){
   #Request data from the user
   repeat{
@@ -328,6 +342,7 @@ addInstance <- function(){
   write.table(instanceData, file = "./FileSystem/Instances.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
 }
 
+#Function to add scenario
 addScenario <- function(){
   #Request data from the user
   repeat{
@@ -365,7 +380,7 @@ addScenario <- function(){
       opt <- scan('stdin', character(), n=1)
       
       if(opt == "Y"){
-        addTarget()
+        addParameter()
         break
       }
       if(opt == "N"){
@@ -673,7 +688,7 @@ if(args$add_experiment){
 
 #list scenario
 if(args$list_scenario){
-  subDir <- "/FileSystem/Scenario.txt"
+  subDir <- "./FileSystem/Scenario.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   print(fileData[, c(1,2,6)])
 }
@@ -940,6 +955,17 @@ if(args$modify_target){
       print("The option entered is not correct, please try again.")
     }
     
+    ############################################################
+    #Ask if you want to continue modifying the entered algorithm
+    cat('Do you want to modify another element of the target?')
+    print("Enter 'Y' to modify another item or 'N' to finish.")
+    
+    opt1 <- scan('stdin', character(), n=1)
+    
+    if(opt1 == "N"){
+      break
+    }
+    #############################################################
     Sys.sleep(0.5)
   }
   print("The target has been successfully modified.")
