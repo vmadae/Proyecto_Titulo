@@ -12,6 +12,7 @@ addTarget <- function(){
   repeat{
     #The name of the target to be added is requested
     cat('Enter the name of the target algorithm to add: ')
+    cat('\n')
     targetName <- scan(quiet = T,'stdin', character(), n=1)
     
     #check if the file exists
@@ -21,15 +22,18 @@ addTarget <- function(){
       break
     }
     cat('The file you want to input already exists, please try again.')
+    cat('\n')
   }
   
   #The description of the target to be added is requested
   cat('Enter a description corresponding to the target to enter: ')
+  cat('\n')
   targetDescription <- readLines("stdin", n = 1)
   
   #The runner file of the target to be added is requested
   repeat{
     cat('Enter the path where the target runner file is hosted: ')
+    cat('\n')
     routeTargetRunner <- scan(quiet = T,'stdin', character(), n=1)
     
     #check if the file exists
@@ -37,11 +41,13 @@ addTarget <- function(){
       break
     }
     cat("The file you entered does not exist, please try again. ")
+    cat('\n')
   }
   
   #The executable file of the target to be added is requested
   repeat{
     cat('Enter the path of the target executable: ')
+    cat('\n')
     executablePathTarget <- scan(quiet = T,'stdin', character(), n=1)
     
     #check if the file exists
@@ -49,6 +55,7 @@ addTarget <- function(){
       break
     }
     cat('The file you entered does not exist, please try again. ')
+    cat('\n')
   }
   
   #Add files to the file system
@@ -85,6 +92,7 @@ addParameter <- function(){
   repeat{
     #The name of the parameter to be added is requested
     cat(('Enter the name of the parameter to add: '))
+    cat('\n')
     parametersName <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
@@ -94,15 +102,18 @@ addParameter <- function(){
       break
     }
     cat('The file you want to input already exists, please try again.')
+    cat('\n')
   }
   
   #The description of the parameter to be added is requested
   cat(('Enter a description of the parameter you want to add: '))
+  cat('\n')
   parametersDescription <- readLines("stdin", n = 1)
   
   #The target algorithm that will be used for the new parameter is requested
   repeat{
     cat(('Enter the target algorithm to use: '))
+    cat('\n')
     targetAlgorithm <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
@@ -115,21 +126,24 @@ addParameter <- function(){
     #If the target algorithm entered by the user is not found in the system, the user can add it or choose another
     repeat{
       cat('The entered target algorithm does not exist in the database, want to add it?')
+      cat('\n')
       cat('Enter "Y" to add or "N" to try again.')
+      cat('\n')
       opt <- scan(quiet = T,'stdin', character(), n=1)
       
       #Entering the "Y" option performs the add target function
-      if(opt == "Y"){
+      if(opt == "Y" | "y"){
         addTarget()
         break
       }
       #Entering option "N" again prompts you to enter a target
-      if(opt == "N"){
+      if(opt == "N" | "n"){
         break
       }
       #If the user enters another undefined letter, it is indicated that the option entered is not valid and it is requested to enter the option again.
-      if(opt != "Y" | opt != "N"){
+      if(opt != "Y" | opt != "N" | opt != "y" | opt != "n"){
         cat('The option entered is not valid, please try again.')
+        cat('\n')
       }
       Sys.sleep(0.5)
     }
@@ -138,6 +152,7 @@ addParameter <- function(){
   #The text file is requested that lists the parameters that irace must configure, which will be used for the new parameter.
   repeat{
     cat(('Ingrese la ruta del archivo donde se listan los parámetros que debe configurar irace (por favor ingrese .txt) : '))
+    cat('\n')
     parameters <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
@@ -145,15 +160,18 @@ addParameter <- function(){
       break
     }
     cat('The file you entered does not exist, please try again.')
+    cat('\n')
   }
   
   #The type of the parameter to add is requested
-  cat(('Enter the type of the parameter: '))
+  cat('Enter the type of the parameter: ')
+  cat('\n')
   typeParameters <- scan(quiet = T,'stdin', character(), n=1)
   
   #
   repeat{
-    cat(('Archivo de texto que lista combinaciones prohibidas de valores de parametros .txt (opcional): '))
+    cat('Archivo de texto que lista combinaciones prohibidas de valores de parametros .txt (opcional): ')
+    cat('\n')
     forbidden <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
@@ -161,10 +179,12 @@ addParameter <- function(){
       break
     }
     cat('The file you entered does not exist, please try again.')
+    cat('\n')
   }
   
   repeat{
-    cat(('Archivo de texto que provee configuraciones para iniciar la busqueda en irace (opcional) .txt: '))
+    cat('Archivo de texto que provee configuraciones para iniciar la busqueda en irace (opcional) .txt: ')
+    cat('\n')
     initial <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
@@ -172,6 +192,7 @@ addParameter <- function(){
       break
     }
     cat('The file you entered does not exist, please try again.')
+    cat('\n')
   }
   
   #Add files to the file system
@@ -219,6 +240,7 @@ addInstance <- function(){
   #Request data from the user
   repeat{
     cat(('Enter the instance name to add: '))
+    cat('\n')
     instanceName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
@@ -228,49 +250,59 @@ addInstance <- function(){
       break
     }
     cat('The file you want to input already exists, please try again.')
+    cat('\n')
   }
   
   cat(('Enter the instance description to add: '))
+  cat('\n')
   instanceDescription <- readLines("stdin", n = 1)
   
   repeat{
     cat(('Enter the instance training to add: '))
+    cat('\n')
     instanceTraining <- scan(quiet = T,'stdin', character(), n=1)
     
     if(file.exists(instanceTraining)){
       break
     }
     cat('The file you entered does not exist, please try again.')
+    cat('\n')
   }
   
   repeat{
     cat(('Enter the instance number of the training to add: '))
+    cat('\n')
     instanceNumberTraining <- scan(quiet = T,'stdin', character(), n=1)
     
     if(file.exists(instanceNumberTraining)){
       break
     }
     cat('The file you entered does not exist, please try again.')
+    cat('\n')
   }
   
   repeat{
     cat(('Enter the instance testing to add: '))
+    cat('\n')
     instanceTesting <- scan(quiet = T,'stdin', character(), n=1)
     
     if(file.exists(instanceTesting)){
       break
     }
     cat('The file you entered does not exist, please try again.')
+    cat('\n')
   }
   
   repeat{
     cat(('Enter the number of the testing to add: '))
+    cat('\n')
     instanceNumberTesting <- scan(quiet = T,'stdin', character(), n=1)
     
     if(file.exists(instanceNumberTesting)){
       break
     }
     cat('The file you entered does not exist, please try again.')
+    cat('\n')
   }
   
   #Add files to the file system
@@ -339,6 +371,7 @@ addScenario <- function(){
   #Request data from the user
   repeat{
     cat('Enter the name of scenario to add: ')
+    cat('\n')
     scenarioName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
@@ -348,13 +381,16 @@ addScenario <- function(){
       break
     }
     cat('The file name you want to input already exists, please try again.')
+    cat('\n')
   }
   
   cat('Enter the scenario description: ')
+  cat('\n')
   scenarioDescription <- readLines("stdin", n = 1)
   
   repeat{
     cat('Enter the space parameter for the scenario: ')
+    cat('\n')
     parameterSpace <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
@@ -366,18 +402,21 @@ addScenario <- function(){
     
     repeat{
       cat('The entered parameter does not exist in the database, want to add it?')
+      cat('\n')
       cat('Enter "Y" to add or "N" to try again.')
+      cat('\n')
       opt <- scan(quiet = T,'stdin', character(), n=1)
       
-      if(opt == "Y"){
+      if(opt == "Y" | opt == "y"){
         addParameter()
         break
       }
-      if(opt == "N"){
+      if(opt == "N" | opt == "n"){
         break
       }
-      if(opt != "Y" | opt != "N"){
+      if(opt != "Y" | opt != "N" | opt == "y"| opt == "n"){
         cat('The option entered is not valid, please try again.')
+        cat('\n')
       }
       Sys.sleep(0.5)
     }
@@ -385,6 +424,7 @@ addScenario <- function(){
   
   repeat{
     cat('Enter the set of instances for the scenario: ')
+    cat('\n')
     setInstances<- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
@@ -396,7 +436,9 @@ addScenario <- function(){
     
     repeat{
       cat('The entered instances does not exist in the database, want to add it?')
+      cat('\n')
       cat('Enter "Y" to add or "N" to try again.')
+      cat('\n')
       opt <- scan(quiet = T,'stdin', character(), n=1)
       
       if(opt == "Y" | opt == "y"){
@@ -408,6 +450,7 @@ addScenario <- function(){
       }
       if(opt != "Y" | opt != "N" | opt != "y" | opt != "n"){
         cat('The option entered is not valid, please try again.')
+        cat('\n')
       }
       Sys.sleep(0.5)
     }
@@ -415,6 +458,7 @@ addScenario <- function(){
   
   repeat{
     cat('Enter the option route for the scenario (.txt ): ')
+    cat('\n')
     optionsRoute <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
@@ -422,9 +466,11 @@ addScenario <- function(){
       break
     }
     cat('The entered option route does not exist in the file system, please try again.')
+    cat('\n')
   }
   
   cat('Enter the type of the scenario: ')
+  cat('\n')
   scenarioType <- readLines("stdin", n = 1)
   
   #Add files to the file system
@@ -514,24 +560,28 @@ args <- parse_args(p)
 if(args$add_target){
   addTarget()
   cat('The target has been entered successfully.')
+  cat('\n')
 }
 
 #add parameters
 if(args$add_parameter){
   addParameter()
   cat('The parameter has been added successfully.')
+  cat('\n')
 }
 
 #add instances
 if(args$add_instances){
   addInstance()
   cat('The instance has been entered successfully.')
+  cat('\n')
 }
 
 #add scenario
 if(args$add_scenario){
   addScenario()
   cat('The stage was added successfully.')
+  cat('\n')
 }
 
 #add version
@@ -539,6 +589,7 @@ if(args$add_version){
   #Request data from the user
   repeat{
     cat('Enter the version number of irace to add: ')
+    cat('\n')
     versionNumber <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
@@ -548,13 +599,16 @@ if(args$add_version){
       break
     }
     cat('The version you want to enter already exists, please try again.')
+    cat('\n')
   }
   
   cat('Enter a description corresponding to the version of irace to enter: ')
+  cat('\n')
   versionDescription <- readLines("stdin", n = 1)
   
   repeat{
     cat('Enter the path where the irace version is located: ')
+    cat('\n')
     versionRoute <- scan(quiet = T,'stdin', character(), n=1)
     
     #check if the file exists
@@ -562,6 +616,7 @@ if(args$add_version){
       break
     }
     cat('The file you entered does not exist, please try again.')
+    cat('\n')
   }
   
   #Add files to the file system
@@ -585,6 +640,7 @@ if(args$add_version){
   write.table(versionData, file = "./FileSystem/Version.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
   cat('The version has been added successfully.')
+  cat('\n')
 }
 
 #add experiment
@@ -592,6 +648,7 @@ if(args$add_experiment){
   #Request data from the user
   repeat{
     cat('Enter the name of the experiment to add: ')
+    cat('\n')
     experimentName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
@@ -601,13 +658,16 @@ if(args$add_experiment){
       break
     }
     cat('The file you want to input already exists, please try again.')
+    cat('\n')
   }
   
   cat('Enter a description corresponding to the experiment to enter: ')
+  cat('\n')
   experimentDescription <- readLines("stdin", n = 1)
   
   repeat{
     cat('Enter the scenario to use in the experiment: ')
+    cat('\n')
     scenarioName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
@@ -619,18 +679,21 @@ if(args$add_experiment){
     
     repeat{
       cat('The entered scenario does not exist in the database, want to add it?')
+      cat('\n')
       cat('Enter "Y" to add or "N" to try again.')
+      cat('\n')
       opt <- scan(quiet = T,'stdin', character(), n=1)
       
-      if(opt == "Y"){
+      if(opt == "Y" | opt == "y"){
         addTarget()
         break
       }
-      if(opt == "N"){
+      if(opt == "N" | opt == "n"){
         break
       }
-      if(opt != "Y" | opt != "N"){
+      if(opt != "Y" | opt != "N" | opt != "y" | opt != "n"){
         cat('The option entered is not valid, please try again.')
+        cat('\n')
       }
       Sys.sleep(0.5)
     }
@@ -719,6 +782,7 @@ if(args$list_experiment){
 if(args$show_scenario){
   repeat{
     cat('Enter the scenario to display: ')
+    cat('\n')
     scenarioName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
@@ -726,8 +790,8 @@ if(args$show_scenario){
     if(file.exists(checkFile)){
       break
     }
-    
-    print("The entered scenario does not exist, please try another.")
+    cat('The entered scenario does not exist, please try another.')
+    cat('\n')
   }
   
   subDir <- "./FileSystem/Scenario.txt"
@@ -748,12 +812,14 @@ if(args$show_scenario){
   cat(crayon::bold('Options route:'), x[,5])
   cat('\n')
   cat(crayon::bold('Type:'), x[,6])
+  cat('\n')
 }
 
 #show target
 if(args$show_target){
   repeat{
     cat('Enter the target algorithm to display: ')
+    cat('\n')
     targetName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
@@ -761,8 +827,8 @@ if(args$show_target){
     if(file.exists(checkFile)){
       break
     }
-    
-    print("The entered target does not exist, please try another.")
+    cat('The entered target does not exist, please try another.')
+    cat('\n')
   }
   
   subDir <- "./FileSystem/Target.txt"
@@ -779,6 +845,7 @@ if(args$show_target){
   cat(crayon::bold('Target rounner route:'), x[,3])
   cat('\n')
   cat(crayon::bold('Executable path:'), x[,4])
+  cat('\n')
 }
 
 #show parameter
@@ -792,8 +859,8 @@ if(args$show_parameter){
     if(file.exists(checkFile)){
       break
     }
-    
-    print("The entered parameter does not exist, please try another.")
+    cat('The entered parameter does not exist, please try another.')
+    cat('\n')
   }
   
   subDir <- "./FileSystem/Parameters.txt"
@@ -818,12 +885,14 @@ if(args$show_parameter){
   cat(crayon::bold('Initial:'), x[,7])
   cat('\n')
   cat(crayon::bold('File-path:'), x[,8])
+  cat('\n')
 }
 
 #show instance
 if(args$show_instance){
   repeat{
     cat('Enter the instance to display: ')
+    cat('\n')
     instanceName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
@@ -831,8 +900,8 @@ if(args$show_instance){
     if(file.exists(checkFile)){
       break
     }
-    
-    print("The entered instance does not exist, please try another.")
+    cat('The entered instance does not exist, please try another.')
+    cat('\n')
   }
   
   subDir <- "./FileSystem/Instances.txt"
@@ -857,12 +926,14 @@ if(args$show_instance){
   cat(crayon::bold('RouteTraining:'), x[,7])
   cat('\n')
   cat(crayon::bold('RouteTesting:'), x[,8])
+  cat('\n')
 }
 
 #show version
 if(args$show_version){
   repeat{
     cat('Enter the version to display: ')
+    cat('\n')
     versionNumber <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
@@ -870,8 +941,8 @@ if(args$show_version){
     if(file.exists(checkFile)){
       break
     }
-    
-    print("The entered version does not exist, please try another.")
+    cat('The entered version does not exist, please try another.')
+    cat('\n')
   }
 
   subDir <- "./FileSystem/Version.txt"
@@ -886,12 +957,14 @@ if(args$show_version){
   cat(crayon::bold('Description:'), x[,2])
   cat('\n')
   cat(crayon::bold('Route:'), x[,3])
+  cat('\n')
 }
 
 #show experiment
 if(args$show_experiment){
   repeat{
     cat('Enter the experiment to display: ')
+    cat('\n')
     experimentName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
@@ -899,8 +972,8 @@ if(args$show_experiment){
     if(file.exists(checkFile)){
       break
     }
-    
-    print("The entered experiment does not exist, please try another.")
+    cat('The entered experiment does not exist, please try another.')
+    cat('\n')
   }
   
   subDir <- "./FileSystem/Experiment.txt"
@@ -925,6 +998,7 @@ if(args$show_experiment){
   cat(crayon::bold('Status:'), x[,7])
   cat('\n')
   cat(crayon::bold('Experiment-path:'), x[,8])
+  cat('\n')
 }
 
 ###############################################################################################################
@@ -935,6 +1009,7 @@ if(args$show_experiment){
 if(args$modify_scenario){
   repeat{
     cat('Enter the scenario to modify: ')
+    cat('\n')
     scenarioName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
@@ -943,6 +1018,7 @@ if(args$modify_scenario){
       break
     }
     cat('The entered scenario does not exist, please try another.')
+    cat('\n')
   }
   
 }
@@ -951,6 +1027,7 @@ if(args$modify_scenario){
 if(args$modify_target){
   repeat{
     cat('Enter the target algorithm to modify: ')
+    cat('\n')
     targetName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
@@ -960,28 +1037,33 @@ if(args$modify_target){
       break
     }
     cat('The entered target does not exist, please try another.')
+    cat('\n')
   }
   
   #Select option to modify
   repeat{
     cat('Enter the option corresponding to the element you want to modify.')
+    cat('\n')
     cat('1. Name')
+    cat('\n')
     cat('2. Description')
+    cat('\n')
     cat('3. Target runner')
+    cat('\n')
     cat('4. Executable')
+    cat('\n')
     
     opt <- scan(quiet = T,'stdin', integer(), n=1)
     
     if(opt == 1){
       cat('Enter the new name for the target: ')
+      cat('\n')
       newNameTarget <- scan(quiet = T,'stdin', character(), n=1)
       
       subDir <- "./FileSystem/Target.txt"
       fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
       
       fileData$Name[fileData$Name == targetName] <- newNameTarget
-      
-      print(fileData)#BORRAR
       
       file.remove("./FileSystem/Target.txt")
       
@@ -992,28 +1074,46 @@ if(args$modify_target){
       
       write.table(fileData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = TRUE, append = TRUE)
       
+      #Registrar modificación
+      #Add data to the file modification
+      modificationData <- list("Target", 
+                         Sys.Date(), 
+                         "Name", 
+                         targetName,
+                         newNameTarget
+                         )
+      write.table(modificationData, file = "./FileSystem/ChangeLog.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+      
+      
+      
       break
     }
     if(opt == 2){
       cat('Se ingreso la opcion 2, se modifica la descripcion')
+      cat('\n')
       break
     }
     if(opt == 3){
       cat('Se ingreso la opcion 3, se modifica el target runner')
+      cat('\n')
       break
     }
     if(opt == 4){
       cat('Se ingreso la opcion 4, se medifica el ejecutable')
+      cat('\n')
       break
     }
     if(opt != 1 | opt != 2 | opt != 3 | opt != 4 ){
       cat('The option entered is not correct, please try again.')
+      cat('\n')
     }
     
     ############################################################
     #Ask if you want to continue modifying the entered algorithm
     cat('Do you want to modify another element of the target?')
+    cat('\n')
     cat('Enter "Y" to modify another item or "N" to finish.')
+    cat('\n')
     
     opt1 <- scan(quiet = T,'stdin', character(), n=1)
     
@@ -1023,13 +1123,14 @@ if(args$modify_target){
     #############################################################
     Sys.sleep(0.5)
   }
-  print("The target has been successfully modified.")
+  cat('The target has been successfully modified.')
 }
 
 #modify parameter
 if(args$modify_parameter){
   repeat{
     cat('Enter the parameter to modify: ')
+    cat('\n')
     parameterName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
@@ -1038,6 +1139,7 @@ if(args$modify_parameter){
       break
     }
     cat('The entered parameter does not exist, please try another.')
+    cat('\n')
   }
   
 }
@@ -1046,6 +1148,7 @@ if(args$modify_parameter){
 if(args$modify_instance){
   repeat{
     cat('Enter the instance to modify: ')
+    cat('\n')
     instanceName <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
@@ -1054,6 +1157,7 @@ if(args$modify_instance){
       break
     }
     cat('The entered instance does not exist, please try another.')
+    cat('\n')
   }
   
 }
@@ -1062,6 +1166,7 @@ if(args$modify_instance){
 if(args$modify_version){
   repeat{
     cat('Enter the version to modify: ')
+    cat('\n')
     versionNumber <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
@@ -1070,5 +1175,6 @@ if(args$modify_version){
       break
     }
     cat('The entered version does not exist, please try another.')
+    cat('\n')
   }
 }
