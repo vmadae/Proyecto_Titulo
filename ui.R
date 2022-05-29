@@ -1,43 +1,96 @@
 suppressWarnings(library(shiny))
+suppressWarnings(library(shinythemes))
+suppressWarnings(library(gt))
 
 shinyUI(fluidPage(
+  theme = shinytheme("united"),
   #Aplication title
-  titlePanel("Benchmark management system for irace"),
+  titlePanel(h1("Benchmark management system for irace", align = "center")),
+  title = "Benchmark management system for irace",
+  hr(),
   
   fluidPage(tabsetPanel(
     tabPanel("Scenario", 
-             titlePanel("Scenario"),
+             titlePanel(h2("Scenario")),
              hr(),
-             DT::dataTableOutput("DataScenarios", width = 12)
+             fluidRow(
+               column(1,  actionButton("more", label = "See more")
+               ),
+               column(11,
+                      DT::dataTableOutput("DataScenarios", width = 1)
+               )
+             )
             ),
     tabPanel("Instances",
-             titlePanel("Instances"),
+             titlePanel(h2("Instances")),
              hr(),
-             DT::dataTableOutput("DataInstances", width = 5)
+             fluidRow(
+               column(1,
+               ),
+               column(11,
+                      DT::dataTableOutput("DataInstances", width = 5)
+               )
+             )
             ),
     tabPanel("Parameters", 
-             titlePanel("Parameters"),
+             titlePanel(h2("Parameters")),
              hr(),
-             DT::dataTableOutput("DataParameters", width = 5)
+             fluidRow(
+               column(1,
+               ),
+               column(11,
+                      DT::dataTableOutput("DataParameters", width = 5)
+               )
+             )
             ),
     tabPanel("Target", 
-             titlePanel("Target"),
+             titlePanel(h2("Target")),
              hr(),
-             DT::dataTableOutput("DataTarget", width = 5)
+             fluidRow(
+               column(1,
+               ),
+               column(11,
+                      DT::dataTableOutput("DataTarget", width = 5)
+               )
+             )
             ),
     tabPanel("Experiments", 
-             titlePanel("Experiments"),
+             titlePanel(h2("Experiments")),
              hr(),
-             DT::dataTableOutput("DataExperiment", width = 5)
+             fluidRow(
+               column(1,
+               ),
+               column(11,
+                      DT::dataTableOutput("DataExperiment", width = 5)
+               )
+             )
             ),
     tabPanel("Iterations",
-             titlePanel("Iterations"),
+             titlePanel(h2("Iterations")),
              hr(),
-             DT::dataTableOutput("DataIterations", width = 5)
+             fluidRow(
+               column(1,
+               ),
+               column(11,
+                      DT::dataTableOutput("DataIterations", width = 5)
+               )
+             )
             ),
     tabPanel("Version", 
-             titlePanel("Versions"),
+             titlePanel(h2("Versions")),
              hr(),
-             DT::dataTableOutput("DataVersion", width = 5)
-             )))
+             fluidRow(
+               column(1,
+               ),
+               column(11,
+                      DT::dataTableOutput("DataVersion", width = 5)
+              )
+            )
+            ),
+    tabPanel("More info", 
+             titlePanel(h2("More info")),
+             hr(),
+             h3("HECHO POR")
+    )
+    ))
 ))

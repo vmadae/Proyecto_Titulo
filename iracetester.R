@@ -2,6 +2,8 @@ suppressWarnings(library(argparser, quietly=TRUE))
 suppressWarnings(library(readr))
 suppressWarnings(library(knitr))
 suppressWarnings(library(shiny))
+suppressWarnings(library(shinythemes))
+suppressWarnings(library(gt))
 
 ###############################################################################################################
 #FUNCTIONS
@@ -76,7 +78,9 @@ addTarget <- function(flagTarget){
   targetData <- list(targetName, 
                      targetDescription, 
                      routeTargetRunner, 
-                     executablePathTarget)
+                     executablePathTarget,
+                     Sys.Date(),
+                     "-")
   write.table(targetData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
   if(flagTarget == TRUE){
@@ -265,7 +269,9 @@ addParameter <- function(flagParameter){
                         typeParameters, 
                         forbidden, 
                         initial, 
-                        routeFile)
+                        routeFile,
+                        Sys.Date(),
+                        "-")
   write.table(parameterData, file = "./FileSystem/Parameters.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
   if(flagParameter == TRUE){
@@ -453,7 +459,9 @@ addInstance <- function(flagInstance){
                        instanceTesting, 
                        instanceNumberTesting, 
                        instanceRouteTraining, 
-                       instanceRouteTesting)
+                       instanceRouteTesting,
+                       Sys.Date(),
+                       "-")
   write.table(instanceData, file = "./FileSystem/Instances.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
   if(flagInstance == TRUE){
@@ -595,7 +603,9 @@ addScenario <- function(flagScenario){
                        parameterSpace, 
                        setInstances, 
                        optionsRoute, 
-                       scenarioType)
+                       scenarioType,
+                       Sys.Date(),
+                       "-")
   write.table(scenarioData, file = "./FileSystem/Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
   if(flagScenario == TRUE){
@@ -652,7 +662,9 @@ addVersion <- function(flagVersion){
   #Add data to the file system
   versionData <- list(versionNumber, 
                       versionDescription, 
-                      versionRoute)
+                      versionRoute,
+                      Sys.Date(),
+                      "-")
   write.table(versionData, file = "./FileSystem/Version.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
   if(flagVersion == TRUE){
@@ -668,7 +680,6 @@ addVersion <- function(flagVersion){
 p <- arg_parser("Help")
 
 #Arguments to list
-
 p <- add_argument(p, short = "-ls", "--list_scenario", help="List all scenarios in the system", flag=TRUE)
 p <- add_argument(p, short = "-lt", "--list_target", help="List all target algorithms", type="string", flag=TRUE)
 p <- add_argument(p, short = "-lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
@@ -684,10 +695,10 @@ p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of 
 p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
 p <- add_argument(p, short = "-se", "--show_experiment", help="Show experiment details", type="string", flag=TRUE)
 
-#Argument to see results
+#Argument to see results #FALTA
 p <- add_argument(p, short = "-r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
 
-#Arguments to test
+#Arguments to test #FALTA
 p <- add_argument(p, short = "-ab", "--add_test", help="Create a test, add: 1.Name 2.Description 3.Irace version 4.Scenarios and their repetitions", type="string", flag=TRUE)
 p <- add_argument(p, short = "-xb", "--execute_test", help="Run a test", type="string", flag=TRUE)
 
@@ -699,15 +710,17 @@ p <- add_argument(p, short = "-as", "--add_scenario", help="Add scenario", type=
 p <- add_argument(p, short = "-av", "--add_version", help="Add new version", type="string", flag=TRUE)
 p <- add_argument(p, short = "-ae", "--add_experiment", help= "Add experiment", type="string", flag=TRUE)
 
-#Argument to modificate
+#Argument to modificate #FALTA
 p <- add_argument(p, short = "-mt", "--modify_target", help="Modify target", type="string", flag=TRUE)
 p <- add_argument(p, short = "-mp", "--modify_parameter", help="Modify parameters", type="string", flag=TRUE)
 p <- add_argument(p, short = "-mi", "--modify_instance", help="Modify instances", type="string", flag=TRUE)
 p <- add_argument(p, short = "-ms", "--modify_scenario", help="Modify scenario", type="string", flag=TRUE)
 p <- add_argument(p, short = "-mv", "--modify_version", help="Modify version", type="string", flag=TRUE)
 
-#Arguments to create website
+#Arguments to create website #FALTA TERMINAR
 p <- add_argument(p, "--web", help="Generate website in shiny", type="string", flag=TRUE)
+
+#Argument for uploading to github #FALTA
 
 # Parse the command line arguments
 args <- parse_args(p)
@@ -881,7 +894,9 @@ if(args$add_experiment){
                      resultados, 
                      settings, 
                      statusExperiment, 
-                     experimentPath)
+                     experimentPath,
+                     Sys.Date(),
+                     "-")
   write.table(targetData, file = "./FileSystem/Experiment.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
 }
 
@@ -893,42 +908,42 @@ if(args$add_experiment){
 if(args$list_scenario){
   subDir <- "./FileSystem/Scenario.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
-  kable(fileData[, c(1,6)])
+  kable(fileData[, c(1,6,7,8)])
 }
 
 #list target
 if(args$list_target){
   subDir <- "./FileSystem/Target.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
-  kable(fileData[1])
+  kable(fileData[, c(1,5,6)])
 }
 
 #list parameters
 if(args$list_parameters){
   subDir <- "./FileSystem/Parameters.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
-  kable(fileData[,c(1,3)])
+  kable(fileData[,c(1,3,9,10)])
 }
 
 #list instances
 if(args$list_instances){
   subDir <- ("./FileSystem/Instances.txt")
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
-  kable(fileData[1])
+  kable(fileData[,c(1,9,10)])
 }
 
 #list versions
 if(args$list_versions){
   subDir <- "./FileSystem/Version.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
-  kable(fileData[1])
+  kable(fileData[, c(1,4,5)])
 }
 
 #list experiment
 if(args$list_experiment){
   subDir <- "./FileSystem/Experiment.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
-  kable(fileData[1])
+  kable(fileData[,c(1,3,4,8,10,11)])
 }
 
 ###############################################################################################################
@@ -963,6 +978,8 @@ if(args$show_scenario){
   cat(crayon::bold('Set of instances:'), x[,4], '\n')
   cat(crayon::bold('Options route:'), x[,5], '\n')
   cat(crayon::bold('Type:'), x[,6], '\n')
+  cat(crayon::bold('Date added:'), x[,7], '\n')
+  cat(crayon::bold('Date modified:'), x[,8], '\n')
 }
 
 #show target
@@ -990,6 +1007,8 @@ if(args$show_target){
   cat(crayon::bold('Description:'), x[,2], '\n')
   cat(crayon::bold('Target rounner route:'), x[,3], '\n')
   cat(crayon::bold('Executable path:'), x[,4], '\n')
+  cat(crayon::bold('Date added:'), x[,5], '\n')
+  cat(crayon::bold('Date modified:'), x[,6], '\n')
 }
 
 #show parameter
@@ -1021,6 +1040,8 @@ if(args$show_parameter){
   cat(crayon::bold('Forbidden:'), x[,6], '\n')
   cat(crayon::bold('Initial:'), x[,7], '\n')
   cat(crayon::bold('File-path:'), x[,8], '\n')
+  cat(crayon::bold('Date added:'), x[,9], '\n')
+  cat(crayon::bold('Date modified:'), x[,10], '\n')
 }
 
 #show instance
@@ -1052,6 +1073,8 @@ if(args$show_instance){
   cat(crayon::bold('#testing:'), x[,6], '\n')
   cat(crayon::bold('RouteTraining:'), x[,7], '\n')
   cat(crayon::bold('RouteTesting:'), x[,8], '\n')
+  cat(crayon::bold('Date added:'), x[,9], '\n')
+  cat(crayon::bold('Date modified:'), x[,10], '\n')
 }
 
 #show version
@@ -1078,6 +1101,8 @@ if(args$show_version){
   cat(crayon::bold('Version Number:'), x[,1], '\n')
   cat(crayon::bold('Description:'), x[,2], '\n')
   cat(crayon::bold('Route:'), x[,3], '\n')
+  cat(crayon::bold('Date added:'), x[,4], '\n')
+  cat(crayon::bold('Date modified:'), x[,5], '\n')
 }
 
 #show experiment
@@ -1110,6 +1135,8 @@ if(args$show_experiment){
   cat(crayon::bold('Settings:'), x[,7], '\n')
   cat(crayon::bold('Status:'), x[,8], '\n')
   cat(crayon::bold('Experiment-path:'), x[,9], '\n')
+  cat(crayon::bold('Date added:'), x[,10], '\n')
+  cat(crayon::bold('Date modified:'), x[,11], '\n')
 }
 
 ###############################################################################################################

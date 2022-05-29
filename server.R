@@ -1,9 +1,13 @@
 suppressWarnings(library(shiny))
+suppressWarnings(library(knitr))
+suppressWarnings(library(gt))
 
 shinyServer(function(input,output){
+  output$value <- renderPrint({input$more})
   output$DataScenarios <- DT::renderDataTable(
     DT::datatable({
-      fileData <- read.delim(file = "./FileSystem/Scenario.txt", header = TRUE, sep = ",", dec = ".")
+      fileData <- read.delim(file = ("./FileSystem/Scenario.txt"), header = TRUE, sep = ",", dec = ".")
+      fileData[c(1,3)]
     })
   )
   output$DataInstances <- DT::renderDataTable(
