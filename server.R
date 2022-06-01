@@ -7,7 +7,7 @@ shinyServer(function(input,output){
   output$DataScenarios <- DT::renderDataTable(
     DT::datatable({
       fileData <- read.delim(file = ("./FileSystem/Scenario.txt"), header = TRUE, sep = ",", dec = ".")
-      fileData[c(1,3)]
+      fileData[c(1,3,6,7,8)]
     })
   )
   output$DataInstances <- DT::renderDataTable(

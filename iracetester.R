@@ -70,8 +70,8 @@ addTarget <- function(flagTarget){
   
   #The executable is saved in the system
   finalRouteExecutableTarget <- paste(routeFile, targetName, sep = "/")
-  finalRouteExecutableTarget <- paste(finalRouteExecutableTarget, "executable", sep = "_")
-  file.copy(routeTargetRunner, finalRouteExecutableTarget)
+  finalRouteExecutableTarget <- paste(finalRouteExecutableTarget, "executable.zip", sep = "_")
+  file.copy(executablePathTarget, finalRouteExecutableTarget)
   executablePathTarget <- finalRouteExecutableTarget
   
   #Add data to the file system
@@ -689,7 +689,7 @@ p <- add_argument(p, short = "-le", "--list_experiment", help="List all register
 
 #Arguments to show
 p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=TRUE)
+p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=FALSE)
 p <- add_argument(p, short = "-sp", "--show_parameter", help="Show the detail of a set of parameters", type="string", flag=TRUE)
 p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of a set of instances", type="string", flag=TRUE)
 p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
@@ -985,7 +985,7 @@ if(args$show_scenario){
 #show target
 if(args$show_target){
   repeat{
-    cat('Enter the target algorithm to display: \n')
+    #cat('Enter the target algorithm to display: \n')
     targetName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
