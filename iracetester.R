@@ -4,6 +4,7 @@ suppressWarnings(library(knitr))
 suppressWarnings(library(shiny))
 suppressWarnings(library(shinythemes))
 suppressWarnings(library(gt))
+suppressWarnings(library(irace))
 
 ###############################################################################################################
 #FUNCTIONS
@@ -672,102 +673,8 @@ addVersion <- function(flagVersion){
   }
 }
 
-###############################################################################################################
-#ADD COMMAND LINE ARGUMENTS
-###############################################################################################################
-
-# Create a parser
-p <- arg_parser("Help")
-
-#Arguments to list
-p <- add_argument(p, short = "-ls", "--list_scenario", help="List all scenarios in the system", flag=TRUE)
-p <- add_argument(p, short = "-lt", "--list_target", help="List all target algorithms", type="string", flag=TRUE)
-p <- add_argument(p, short = "-lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
-p <- add_argument(p, short = "-li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
-p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
-p <- add_argument(p, short = "-le", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
-
-#Arguments to show
-p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=FALSE)
-p <- add_argument(p, short = "-sp", "--show_parameter", help="Show the detail of a set of parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of a set of instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
-p <- add_argument(p, short = "-se", "--show_experiment", help="Show experiment details", type="string", flag=TRUE)
-
-#Argument to see results #FALTA
-p <- add_argument(p, short = "-r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
-
-#Arguments to test #FALTA
-p <- add_argument(p, short = "-ab", "--add_test", help="Create a test, add: 1.Name 2.Description 3.Irace version 4.Scenarios and their repetitions", type="string", flag=TRUE)
-p <- add_argument(p, short = "-xb", "--execute_test", help="Run a test", type="string", flag=TRUE)
-
-#Arguments to add
-p <- add_argument(p, short = "-at", "--add_target", help="Add target", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ap", "--add_parameter", help="Add parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ai", "--add_instances", help="Add instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "-as", "--add_scenario", help="Add scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "-av", "--add_version", help="Add new version", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ae", "--add_experiment", help= "Add experiment", type="string", flag=TRUE)
-
-#Argument to modificate #FALTA
-p <- add_argument(p, short = "-mt", "--modify_target", help="Modify target", type="string", flag=TRUE)
-p <- add_argument(p, short = "-mp", "--modify_parameter", help="Modify parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "-mi", "--modify_instance", help="Modify instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "-ms", "--modify_scenario", help="Modify scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "-mv", "--modify_version", help="Modify version", type="string", flag=TRUE)
-
-#Arguments to create website #FALTA TERMINAR
-p <- add_argument(p, "--web", help="Generate website in shiny", type="string", flag=TRUE)
-
-#Argument for uploading to github #FALTA
-
-# Parse the command line arguments
-args <- parse_args(p)
-
-###############################################################################################################
-#FUNCTIONALITIES OF THE ARGUMENT
-###############################################################################################################
-#ARGUMENTS TO ADD
-###############################################################################################################
-
-#add target
-if(args$add_target){
-  flagTarget = FALSE
-  addTarget(flagTarget)
-  cat('The target has been entered successfully. \n')
-}
-
-#add parameters
-if(args$add_parameter){
-  flagParameter = FALSE
-  addParameter(flagParameter)
-  cat('The parameter has been added successfully. \n')
-}
-
-#add instances
-if(args$add_instances){
-  flagInstance = FALSE
-  addInstance(flagInstance)
-  cat('The instance has been entered successfully. \n')
-}
-
-#add scenario
-if(args$add_scenario){
-  flagScenario <- FALSE
-  addScenario(flagScenario)
-  cat('The stage was added successfully. \n')
-}
-
-#add version
-if(args$add_version){
-  flagVersion <- FALSE
-  addVersion(flagVersion)
-  cat('The version has been added successfully. \n')
-}
-
-#add experiment
-if(args$add_experiment){
+#Function to add experiment
+addExperiment <- function(flagExperiment){
   #Request data from the user
   repeat{
     cat('Enter the name of the experiment to add: \n')
@@ -898,6 +805,169 @@ if(args$add_experiment){
                      Sys.Date(),
                      "-")
   write.table(targetData, file = "./FileSystem/Experiment.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  if(flagExperiment == TRUE){
+    return(experimentName)
+  }
+}
+
+#Function run the experiment
+runExperiment <- function(scenarioName, nameExperiment, nRepetitions, cores, 
+                          scenarioFile, parameterFile, targetRunner, 
+                          trainInstancesFile, testInstancesFile, 
+                          configurationsFile, forbiddenFile){
+  
+  # create directory for repetitions
+  path_to_test <- paste0("./FileSystem/Files/Iterations", scenarioName)
+  dir.create(file.path(path_to_test), showWarnings = FALSE)
+  
+  # create scenario object
+  scenario_files <- list()
+  scenario_files$parameterFile <- parameterFile
+  scenario_files$forbiddenFile <- forbiddenFile
+  scenario_files$configurationsFile <- configurationsFile
+  scenario_files$targetRunner <- targetRunner
+  scenario_files$trainInstancesFile <- trainInstancesFile
+  scenario_files$testInstancesFile <- testInstancesFile
+  
+  scenario <- irace::defaultScenario(scenario_files)
+  scenario <- irace::readScenario(filename=scenarioFile, scenario=scenario)
+  
+  # set parallel cores
+  if (!is.null(cores)) {
+    cat("here core", cores)
+    scenario$parallel <- cores
+  }
+  
+  # read parameters information
+  parameters <- irace::readParameters(file=parameterFile)
+  
+  seed = 1234567
+  for (i in 1:nRepetitions) {
+    # generate repetition folder name test-num
+    num <- i
+    if (i<9) num <- paste0("0",i)
+    path_exe <- paste0(path_to_test, "/test-",num)
+    # create directory to run irace
+    dir.create(file.path(path_exe), showWarnings = FALSE)
+    # add execution path to scenario
+    scenario$execDir <- path_exe
+    # add execution seed
+    scenario$seed <- seed
+    # run irace
+    cat("# Running repetition 1\n")
+    irace::irace(scenario=scenario, parameters=parameters)
+    # next seed
+    seed = seed + 1
+  }
+}
+
+
+is_repetition_completed <- function(scenarioName, nrep) {
+  num <- nrep
+  if (num < 9) num <- paste0("0", nrep)
+  logFile <- paste0(tests_folder, "/", scenarioName, "/test-", num, "/irace.Rdata")
+  load(logFile)
+  return (iraceResults$state$completed$flag)
+}
+
+###############################################################################################################
+#ADD COMMAND LINE ARGUMENTS
+###############################################################################################################
+
+# Create a parser
+p <- arg_parser("Help")
+
+#Arguments to list
+p <- add_argument(p, short = "-ls", "--list_scenario", help="List all scenarios in the system", flag=TRUE)
+p <- add_argument(p, short = "-lt", "--list_target", help="List all target algorithms", type="string", flag=TRUE)
+p <- add_argument(p, short = "-lp", "--list_parameters", help="List all parameter sets", type="string", flag=TRUE)
+p <- add_argument(p, short = "-li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
+p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
+p <- add_argument(p, short = "-le", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
+
+#Arguments to show
+p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=TRUE)
+p <- add_argument(p, short = "-sp", "--show_parameter", help="Show the detail of a set of parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of a set of instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
+p <- add_argument(p, short = "-se", "--show_experiment", help="Show experiment details", type="string", flag=TRUE)
+
+#Argument to see results #FALTA
+p <- add_argument(p, short = "-r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
+
+#Arguments to test #FALTA
+p <- add_argument(p, short = "-ee", "--execute_experiment", help="Run a test", type="string", flag=TRUE)
+
+#Arguments to add
+p <- add_argument(p, short = "-at", "--add_target", help="Add target", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ap", "--add_parameter", help="Add parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ai", "--add_instances", help="Add instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-as", "--add_scenario", help="Add scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-av", "--add_version", help="Add new version", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ae", "--add_experiment", help= "Add experiment", type="string", flag=TRUE)
+
+#Argument to modificate #FALTA
+p <- add_argument(p, short = "-mt", "--modify_target", help="Modify target", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mp", "--modify_parameter", help="Modify parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mi", "--modify_instance", help="Modify instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-ms", "--modify_scenario", help="Modify scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-mv", "--modify_version", help="Modify version", type="string", flag=TRUE)
+
+#Arguments to create website #FALTA TERMINAR
+p <- add_argument(p, "--web", help="Generate website in shiny", type="string", flag=TRUE)
+
+#Argument for uploading to github #FALTA
+
+# Parse the command line arguments
+args <- parse_args(p)
+
+###############################################################################################################
+#FUNCTIONALITIES OF THE ARGUMENT
+###############################################################################################################
+#ARGUMENTS TO ADD
+###############################################################################################################
+
+#add target
+if(args$add_target){
+  flagTarget = FALSE
+  addTarget(flagTarget)
+  cat('The target has been entered successfully. \n')
+}
+
+#add parameters
+if(args$add_parameter){
+  flagParameter = FALSE
+  addParameter(flagParameter)
+  cat('The parameter has been added successfully. \n')
+}
+
+#add instances
+if(args$add_instances){
+  flagInstance = FALSE
+  addInstance(flagInstance)
+  cat('The instance has been entered successfully. \n')
+}
+
+#add scenario
+if(args$add_scenario){
+  flagScenario <- FALSE
+  addScenario(flagScenario)
+  cat('The stage was added successfully. \n')
+}
+
+#add version
+if(args$add_version){
+  flagVersion <- FALSE
+  addVersion(flagVersion)
+  cat('The version has been added successfully. \n')
+}
+
+#add experiment
+if(args$add_experiment){
+  flagExperiment <- FALSE
+  addExperiment(flagExperiment)
 }
 
 ###############################################################################################################
@@ -1123,7 +1193,7 @@ if(args$show_experiment){
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
-  x <- subset(fileData, Test == experimentName)
+  x <- subset(fileData, Experiment == experimentName)
   
   cat('\n')
   cat(crayon::bold('Name:'), x[,1], '\n')
@@ -1178,7 +1248,7 @@ if(args$modify_target){
     cat('\n')
   }
   
-  #Select option to modify
+  #Select option to modify #FALTA AÑADIR ELEMENTO DE CONFIGURACION
   repeat{
     cat('Enter the option corresponding to the element you want to modify.')
     cat('\n')
@@ -1215,11 +1285,11 @@ if(args$modify_target){
       #Registrar modificación
       #Add data to the file modification
       modificationData <- list("Target", 
-                         Sys.Date(), 
-                         "Name", 
-                         targetName,
-                         newNameTarget
-                         )
+                               Sys.Date(), 
+                               "Name", 
+                               targetName,
+                               newNameTarget
+      )
       write.table(modificationData, file = "./FileSystem/ChangeLog.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
       
       
@@ -1260,6 +1330,43 @@ if(args$modify_target){
     if(opt == 3){
       cat('Se ingreso la opcion 3, se modifica el target runner')
       cat('\n')
+      #Loop that helps entering a path so the system doesnt try to add a fake file.
+      repeat{
+        cat('Enter the new target runner path for the target: ')
+        cat('\n')
+        newTargetRunnerRoute <- scan(quiet = T,'stdin', character(), n=1)
+        if(file.exists(newTargetRunnerRoute)){
+          break
+        } else {
+          cat('File path doesnt found.')
+        }
+      }
+      
+      actualTargetRoute <- paste("./FileSystem/Files/Target/",targetName,sep='')
+      actualTargetRoute <- paste(actualTargetRoute,paste(targetName,'_runner',sep = ''),sep = '/')
+      file.remove(actualTargetRoute)
+      file.copy(newTargetRunnerRoute,actualTargetRoute)
+      
+      
+      
+      subDir <- "./FileSystem/Target.txt"
+      fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+      
+      fileData$Target.runner.route[fileData$Target.runner.route == targetName] <- newTargetRunnerRoute
+      
+      file.remove("./FileSystem/Target.txt")
+      write.table(fileData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = TRUE)
+      
+      #Registrar modificación
+      #Add data to the file modification
+      modificationData <- list("Target", 
+                               Sys.Date(), 
+                               "Target runner path", 
+                               targetName,
+                               newTargetRunnerRoute
+      )
+      write.table(modificationData, file = "./FileSystem/ChangeLog.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+      
     }
     if(opt == 4){
       cat('Se ingreso la opcion 4, se medifica el ejecutable')
@@ -1346,4 +1453,109 @@ if(args$modify_version){
 ###############################################################################################################
 if(args$web){
   shiny::runApp()
+}
+
+###############################################################################################################
+#RUN THE EXPERIMENT
+###############################################################################################################
+if(args$execute_experiment){
+  repeat{
+    cat('Enter the experiment you want to run: \n')
+    nameExperiment <- tolower(scan(quiet = T,'stdin', character(), n=1))
+    
+    checkFile <- paste("./FileSystem/Files/Experiment", nameExperiment, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    
+    #If the entered scenario is not found, the option is given to create a new one or enter another one.
+    repeat{
+      cat('The entered experiment does not exist in the database, want to add it? \n')
+      cat('Enter "Y" to add or "N" to try again. \n')
+      opt <- tolower(scan(quiet = T,'stdin', character(), n=1))
+      
+      if(opt == "y"){
+        flagExperiment <- TRUE
+        nameExperiment <- addExperiment(flagExperiment)
+        break
+      }
+      if(opt == "n"){
+        break
+      }
+      if(opt != "y" | opt != "n"){
+        cat('The option entered is not valid, please try again. \n')
+      }
+      Sys.sleep(0.5)
+    }
+    
+    if(flagExperiment == TRUE){
+      break
+    }
+  }
+  
+  #information is read from the database
+  subDir <- "./FileSystem/Experiment.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  #The information of the experiment entered by the user is obtained
+  xExperiment <- subset(fileData, Experiment == nameExperiment)
+  
+  scenarioName <- xExperiment[,3]
+  nRepetitions <- xExperiment[,5]
+  
+  #It must be modified according to whether you work on a computer or with servers
+  #He is currently working on a computer
+  cores = 1
+  
+  #The scenario indicated in the experiment is entered to obtain information.
+  subDir <- "./FileSystem/Scenario.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  xScenario <- subset(fileData, Name == scenarioName)
+  
+  scenarioFile <- xScenario[,5]
+  nameParameter <- xScenario[,3]
+  nameInstance <- xScenario[,4]
+  
+  #The parameter indicated in the escenario is entered to obtain information.
+  subDir <- "./FileSystem/Parameters.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  xParameter <- subset(fileData, Name == nameParameter)
+  
+  parameterFile <- xParameter[,4]
+  nameTarget <- xParameter[,3]
+  forbiddenFile <- xParameter[,6]
+  
+  if(forbiddenFile != -1){
+    forbiddenFile <- NULL
+  }
+  
+  #The target indicated in the parameter is entered to obtain information.
+  subDir <- "./FileSystem/Target.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  xTarget <- subset(fileData, Name == nameTarget)
+  
+  targetRunner <- xTarget[,3]
+  
+  #The instance indicated in the scenario is entered to obtain information.
+  subDir <- "./FileSystem/Instances.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  xInstance <- subset(fileData, Name == nameInstance)
+  
+  trainInstancesFile <- xInstance[,3]
+  print(trainInstancesFile)
+  testInstancesFile <- xInstance[,5]
+  print(testInstancesFile)
+  
+  targetRunner="./FileSystem/Files/Target/trunv.p.1/trunv.p.1_runner.exe"
+  
+  runExperiment(scenarioName, nameExperiment, nRepetitions, cores, 
+                scenarioFile, parameterFile, targetRunner, 
+                trainInstancesFile, testInstancesFile = NULL, 
+                configurationsFile = NULL, forbiddenFile = NULL)
+  
 }

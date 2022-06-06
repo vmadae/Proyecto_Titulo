@@ -10,6 +10,7 @@ shinyServer(function(input,output){
       fileData[c(1,3,6,7,8)]
     })
   )
+  
   output$DataInstances <- DT::renderDataTable(
     DT::datatable({
       fileData <- read.delim(file = "./FileSystem/Instances.txt", header = TRUE, sep = ",", dec = ".")

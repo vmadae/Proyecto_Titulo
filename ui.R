@@ -14,10 +14,12 @@ shinyUI(fluidPage(
              titlePanel(h2("Scenario")),
              hr(),
              fluidRow(
-               column(1,  actionButton("more", label = "See more")
+               column(1,  
+                      #actionButton("more", label = "See more")
                ),
                column(11,
-                      DT::dataTableOutput("DataScenarios", width = 1)
+                     #DT::dataTableOutput("DataScenarios", width = 1)
+                     DT::dataTableOutput('DataScenarios')
                )
              )
             ),
@@ -28,7 +30,7 @@ shinyUI(fluidPage(
                column(1,
                ),
                column(11,
-                      DT::dataTableOutput("DataInstances", width = 5)
+                      DT::dataTableOutput("DataInstances")
                )
              )
             ),

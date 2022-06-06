@@ -1,1 +1,2 @@
-Test,Description,Scenario,version,#Repetitions,Results,Settings,Status,Experiment.path,Date.added,Date.modified
+Experiment,Description,Scenario,version,#Repetitions,Results,Settings,Status,Experiment.path,Date.added,Date.modified
+"prueba","prueba","scenario_acotsp","5",3,"","","created","",2022-06-05,"-"
