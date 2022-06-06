@@ -1248,7 +1248,7 @@ if(args$modify_target){
     cat('\n')
   }
   
-  #Select option to modify #FALTA AÑADIR ELEMENTO DE CONFIGURACION
+  #Select option to modify
   repeat{
     cat('Enter the option corresponding to the element you want to modify.')
     cat('\n')
@@ -1285,7 +1285,8 @@ if(args$modify_target){
       #Registrar modificación
       #Add data to the file modification
       modificationData <- list("Target", 
-                               Sys.Date(), 
+                               Sys.Date(),
+                               targetName,
                                "Name", 
                                targetName,
                                newNameTarget
@@ -1298,12 +1299,16 @@ if(args$modify_target){
     if(opt == 2){
       cat('Enter the new description for the target: ')
       cat('\n')
-      newDescTarget <- scan(quiet = T,'stdin', character(), n=1)
+      newDescTarget <- tolower(readLines("stdin", n = 1))
       
       subDir <- "./FileSystem/Target.txt"
       fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
       
-      fileData$Description[fileData$Description == targetName] <- newDescTarget
+      oldDescription <- fileData$Description[fileData$Name == targetName]
+      
+      fileData$Description[fileData$Name == targetName] <- newDescTarget
+      
+      
       
       file.remove("./FileSystem/Target.txt")
       
@@ -1317,9 +1322,10 @@ if(args$modify_target){
       #Registrar modificación
       #Add data to the file modification
       modificationData <- list("Target", 
-                               Sys.Date(), 
+                               Sys.Date(),
+                               targetName, 
                                "Description", 
-                               targetName,
+                               oldDescription,
                                newDescTarget
       )
       write.table(modificationData, file = "./FileSystem/ChangeLog.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
@@ -1348,19 +1354,11 @@ if(args$modify_target){
       file.copy(newTargetRunnerRoute,actualTargetRoute)
       
       
-      
-      subDir <- "./FileSystem/Target.txt"
-      fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
-      
-      fileData$Target.runner.route[fileData$Target.runner.route == targetName] <- newTargetRunnerRoute
-      
-      file.remove("./FileSystem/Target.txt")
-      write.table(fileData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = TRUE)
-      
       #Registrar modificación
       #Add data to the file modification
       modificationData <- list("Target", 
-                               Sys.Date(), 
+                               Sys.Date(),
+                               targetName,
                                "Target runner path", 
                                targetName,
                                newTargetRunnerRoute
@@ -1411,6 +1409,151 @@ if(args$modify_parameter){
     cat('\n')
   }
   
+  #Select option to modify
+  repeat{
+    cat('Enter the option corresponding to the element you want to modify.')
+    cat('\n')
+    cat('1. Name')
+    cat('\n')
+    cat('2. Description')
+    cat('\n')
+    cat('3. Target algorithm')
+    cat('\n')
+    cat('4. Type of parameter')
+    cat('\n')
+    
+    opt <- scan(quiet = T,'stdin', integer(), n=1)
+    
+    if(opt == 1){
+      cat('Enter the new name for the parameter: ')
+      cat('\n')
+      newParamName <- scan(quiet = T,'stdin', character(), n=1)
+      
+      subDir <- "./FileSystem/Parameters.txt"
+      fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+      
+      fileData$Date.modified[fileData$Name == parameterName] <- Sys.Date()
+      fileData$Name[fileData$Name == parameterName] <- newParamName
+      
+      file.remove("./FileSystem/Parameters.txt")
+      
+      fromPath <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
+      toPath <- paste("./FileSystem/Files/Parameters", newParamName, sep = "/")
+      
+      file.rename(fromPath, toPath)
+      
+      write.table(fileData, file = "./FileSystem/Parameters.txt", sep = "," ,row.names = FALSE, col.names = TRUE)
+      
+      #Registrar modificación
+      #Add data to the file modification
+      modificationData <- list("Parameter", 
+                               Sys.Date(),
+                               parameterName,
+                               "Name", 
+                               parameterName,
+                               newParamName
+      )
+      write.table(modificationData, file = "./FileSystem/ChangeLog.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+      
+      
+      
+    }
+    if(opt == 2){
+      cat('Enter the new description for the parameter: ')
+      cat('\n')
+      newParamDesc <- scan(quiet = T,'stdin', character(), n=1)
+      
+      subDir <- "./FileSystem/Parameters.txt"
+      fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+      
+      oldDescription <- fileData$Description[fileData$Name == parameterName]
+      
+      fileData$Date.modified[fileData$Name == parameterName] <- Sys.Date()
+      fileData$Description[fileData$Name == parameterName] <- newParamDesc
+      
+      
+      
+      file.remove("./FileSystem/Parameters.txt")
+      
+      fromPath <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
+      toPath <- paste("./FileSystem/Files/Parameters", newParamDesc, sep = "/")
+      
+      file.rename(fromPath, toPath)
+      
+      write.table(fileData, file = "./FileSystem/Parameters.txt", sep = "," ,row.names = FALSE, col.names = TRUE)
+      
+      #Registrar modificación
+      #Add data to the file modification
+      modificationData <- list("Parameters", 
+                               Sys.Date(),
+                               parameterName, 
+                               "Description", 
+                               oldDescription,
+                               newParamDesc
+      )
+      write.table(modificationData, file = "./FileSystem/ChangeLog.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+      
+      
+      
+    }
+    if(opt == 3){
+      cat('Se ingreso la opcion 3, se modifica el target runner')
+      cat('\n')
+      #Loop that helps entering a path so the system doesnt try to add a fake file.
+      repeat{
+        cat('Enter the new target runner path for the target: ')
+        cat('\n')
+        newTargetRunnerRoute <- scan(quiet = T,'stdin', character(), n=1)
+        if(file.exists(newTargetRunnerRoute)){
+          break
+        } else {
+          cat('File path doesnt found.')
+        }
+      }
+      
+      actualTargetRoute <- paste("./FileSystem/Files/Target/",targetName,sep='')
+      actualTargetRoute <- paste(actualTargetRoute,paste(targetName,'_runner',sep = ''),sep = '/')
+      file.remove(actualTargetRoute)
+      file.copy(newTargetRunnerRoute,actualTargetRoute)
+      
+      
+      #Registrar modificación
+      #Add data to the file modification
+      modificationData <- list("Target", 
+                               Sys.Date(),
+                               targetName,
+                               "Target runner path", 
+                               targetName,
+                               newTargetRunnerRoute
+      )
+      write.table(modificationData, file = "./FileSystem/ChangeLog.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+      
+    }
+    if(opt == 4){
+      cat('Se ingreso la opcion 4, se medifica el ejecutable')
+      cat('\n')
+    }
+    if(opt != 1 & opt != 2 & opt != 3 & opt != 4 ){
+      cat('The option entered is not correct, please try again.')
+      cat('\n')
+    }
+    
+    #############################################################
+    
+    #Ask if you want to continue modifying the entered algorithm
+    cat('Do you want to modify another element of the target?')
+    cat('\n')
+    cat('Enter "Y" to modify another item or "N" to finish.')
+    cat('\n')
+    
+    opt1 <- scan(quiet = T,'stdin', character(), n=1)
+    
+    if(opt1 == "N"){
+      break
+    }
+    #############################################################
+    Sys.sleep(0.5)
+  }
 }
 
 #modify instance

@@ -41,7 +41,7 @@ shinyUI(fluidPage(
                column(1,
                ),
                column(11,
-                      DT::dataTableOutput("DataParameters", width = 5)
+                      DT::dataTableOutput("DataParameters")
                )
              )
             ),
@@ -52,7 +52,7 @@ shinyUI(fluidPage(
                column(1,
                ),
                column(11,
-                      DT::dataTableOutput("DataTarget", width = 5)
+                      DT::dataTableOutput("DataTarget")
                )
              )
             ),
@@ -63,7 +63,7 @@ shinyUI(fluidPage(
                column(1,
                ),
                column(11,
-                      DT::dataTableOutput("DataExperiment", width = 5)
+                      DT::dataTableOutput("DataExperiment")
                )
              )
             ),
@@ -74,7 +74,7 @@ shinyUI(fluidPage(
                column(1,
                ),
                column(11,
-                      DT::dataTableOutput("DataIterations", width = 5)
+                      DT::dataTableOutput("DataIterations")
                )
              )
             ),
@@ -85,7 +85,7 @@ shinyUI(fluidPage(
                column(1,
                ),
                column(11,
-                      DT::dataTableOutput("DataVersion", width = 5)
+                      DT::dataTableOutput("DataVersion")
               )
             )
             ),
