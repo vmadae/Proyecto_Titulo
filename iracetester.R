@@ -818,7 +818,7 @@ runExperiment <- function(scenarioName, nameExperiment, nRepetitions, cores,
                           configurationsFile, forbiddenFile){
   
   # create directory for repetitions
-  path_to_test <- paste0("./FileSystem/Files/Iterations", scenarioName)
+  path_to_test <- paste("./FileSystem/Files/Iterations", scenarioName, sep= "/")
   dir.create(file.path(path_to_test), showWarnings = FALSE)
   
   # create scenario object
@@ -828,10 +828,16 @@ runExperiment <- function(scenarioName, nameExperiment, nRepetitions, cores,
   scenario_files$configurationsFile <- configurationsFile
   scenario_files$targetRunner <- targetRunner
   scenario_files$trainInstancesFile <- trainInstancesFile
+  print(scenario_files$trainInstancesFile)
   scenario_files$testInstancesFile <- testInstancesFile
   
+  scenario_files$trainInstancesDir <- ""
+  scenario_files$testInstancesDir <- ""
+  
   scenario <- irace::defaultScenario(scenario_files)
+  print(scenario$trainInstancesFile)
   scenario <- irace::readScenario(filename=scenarioFile, scenario=scenario)
+  print(scenario$trainInstancesFile)
   
   # set parallel cores
   if (!is.null(cores)) {
@@ -863,6 +869,7 @@ runExperiment <- function(scenarioName, nameExperiment, nRepetitions, cores,
 }
 
 
+#Function ...
 is_repetition_completed <- function(scenarioName, nrep) {
   num <- nrep
   if (num < 9) num <- paste0("0", nrep)
@@ -922,6 +929,21 @@ p <- add_argument(p, "--web", help="Generate website in shiny", type="string", f
 
 # Parse the command line arguments
 args <- parse_args(p)
+
+###############################################################################################################
+#VALIDATE PACKAGE
+###############################################################################################################
+packages <- c("argparser","reader","knitr","shiny","shinythemes","gt","irace")
+
+package.check <- lapply(
+  packages,
+  FUN = function(x){
+    if(!require(x,character.only = TRUE)){
+      install.packages(x, dependencies = TRUE)
+      library(x,character.only = TRUE)
+    }
+  }
+)
 
 ###############################################################################################################
 #FUNCTIONALITIES OF THE ARGUMENT
