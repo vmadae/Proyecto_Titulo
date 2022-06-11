@@ -1,3 +1,14 @@
+###############################################################################################################
+#VALIDATE PACKAGE
+###############################################################################################################
+packages <- c("argparser","readr","knitr","shiny","shinythemes","gt","irace")
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages], repos = "http://cran.us.r-project.org")
+}
+
 suppressWarnings(library(argparser, quietly=TRUE))
 suppressWarnings(library(readr))
 suppressWarnings(library(knitr))
@@ -5,6 +16,9 @@ suppressWarnings(library(shiny))
 suppressWarnings(library(shinythemes))
 suppressWarnings(library(gt))
 suppressWarnings(library(irace))
+
+# Packages loading
+invisible(lapply(packages, library, character.only = TRUE))
 
 ###############################################################################################################
 #FUNCTIONS
@@ -878,6 +892,7 @@ is_repetition_completed <- function(scenarioName, nrep) {
   return (iraceResults$state$completed$flag)
 }
 
+
 ###############################################################################################################
 #ADD COMMAND LINE ARGUMENTS
 ###############################################################################################################
@@ -893,13 +908,21 @@ p <- add_argument(p, short = "-li", "--list_instances", help="List all instance 
 p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
 p <- add_argument(p, short = "-le", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
 
-#Arguments to show
-p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", flag=TRUE)
-p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", flag=TRUE)
-p <- add_argument(p, short = "-sp", "--show_parameter", help="Show the detail of a set of parameters", type="string", flag=TRUE)
-p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of a set of instances", type="string", flag=TRUE)
-p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", flag=TRUE)
-p <- add_argument(p, short = "-se", "--show_experiment", help="Show experiment details", type="string", flag=TRUE)
+#Argument to display by entering the name
+p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", default ="NA")
+p <- add_argument(p, short = "-st", "--show_target", help="Show the detail of a target algorithm", type="string", default ="NA")
+p <- add_argument(p, short = "-sp", "--show_parameter", help="Show the detail of a set of parameters", type="string", default ="NA")
+p <- add_argument(p, short = "-si", "--show_instance", help="Show the detail of a set of instances", type="string", default ="NA")
+p <- add_argument(p, short = "-sv", "--show_version", help="Show version details", type="string", default ="NA")
+p <- add_argument(p, short = "-se", "--show_experiment", help="Show experiment details", type="string", default ="NA")
+
+#Arguments to show 
+p <- add_argument(p, short = "-sws", "--showScenario", help="Show details of a scenario", type="string", flag=TRUE)
+p <- add_argument(p, short = "-swt", "--showTarget", help="Show the detail of a target algorithm", type="string", flag=TRUE)
+p <- add_argument(p, short = "-swp", "--showParameter", help="Show the detail of a set of parameters", type="string", flag=TRUE)
+p <- add_argument(p, short = "-swi", "--showInstance", help="Show the detail of a set of instances", type="string", flag=TRUE)
+p <- add_argument(p, short = "-swv", "--showVersion", help="Show version details", type="string", flag=TRUE)
+p <- add_argument(p, short = "-swe", "--showExperiment", help="Show experiment details", type="string", flag=TRUE)
 
 #Argument to see results #FALTA
 p <- add_argument(p, short = "-r", "--results", help="Show results (experiments) of a test", type="string", flag=TRUE)
@@ -929,21 +952,6 @@ p <- add_argument(p, "--web", help="Generate website in shiny", type="string", f
 
 # Parse the command line arguments
 args <- parse_args(p)
-
-###############################################################################################################
-#VALIDATE PACKAGE
-###############################################################################################################
-packages <- c("argparser","reader","knitr","shiny","shinythemes","gt","irace")
-
-package.check <- lapply(
-  packages,
-  FUN = function(x){
-    if(!require(x,character.only = TRUE)){
-      install.packages(x, dependencies = TRUE)
-      library(x,character.only = TRUE)
-    }
-  }
-)
 
 ###############################################################################################################
 #FUNCTIONALITIES OF THE ARGUMENT
@@ -1042,8 +1050,191 @@ if(args$list_experiment){
 #ARGUMENTS TO SHOW
 ###############################################################################################################
 
+#show scenario by entering the name
+if(args$show_scenario != "NA"){
+  repeat{
+    scenarioName <- tolower(args$show_scenario)
+    
+    checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    cat('The entered scenario does not exist, please try another.')
+    cat('\n')
+  }
+  
+  subDir <- "./FileSystem/Scenario.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Name == scenarioName)
+  
+  cat('\n')
+  cat(crayon::bold('Name:'), x[,1], '\n')
+  cat(crayon::bold('Description:'), x[,2], '\n')
+  cat(crayon::bold('Parameter space:'), x[,3], '\n')
+  cat(crayon::bold('Set of instances:'), x[,4], '\n')
+  cat(crayon::bold('Options route:'), x[,5], '\n')
+  cat(crayon::bold('Type:'), x[,6], '\n')
+  cat(crayon::bold('Date added:'), x[,7], '\n')
+  cat(crayon::bold('Date modified:'), x[,8], '\n')
+}
+
+#show target by entering the name
+if(args$show_target != "NA"){
+  repeat{
+    targetName <- args$show_target
+    
+    checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    cat('The entered target does not exist, please try another. \n')
+  }
+  
+  subDir <- "./FileSystem/Target.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Name == targetName)
+  
+  cat('\n')
+  cat(crayon::bold('Name:'), x[,1], '\n')
+  cat(crayon::bold('Description:'), x[,2], '\n')
+  cat(crayon::bold('Target rounner route:'), x[,3], '\n')
+  cat(crayon::bold('Executable path:'), x[,4], '\n')
+  cat(crayon::bold('Date added:'), x[,5], '\n')
+  cat(crayon::bold('Date modified:'), x[,6], '\n')
+}
+
+#show parameter by entering the name
+if(args$show_parameter != "NA"){
+  repeat{
+    parameterName <- tolower(args$show_parameter)
+    
+    checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    cat('The entered parameter does not exist, please try another. \n')
+  }
+  
+  subDir <- "./FileSystem/Parameters.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Name == parameterName)
+  
+  cat('\n')
+  cat(crayon::bold('Name:'), x[,1], '\n')
+  cat(crayon::bold('Description:'), x[,2], '\n')
+  cat(crayon::bold('Target algorithm:'), x[,3], '\n')
+  cat(crayon::bold('#Parameters:'), x[,4], '\n')
+  cat(crayon::bold('Type:'), x[,5], '\n')
+  cat(crayon::bold('Forbidden:'), x[,6], '\n')
+  cat(crayon::bold('Initial:'), x[,7], '\n')
+  cat(crayon::bold('File-path:'), x[,8], '\n')
+  cat(crayon::bold('Date added:'), x[,9], '\n')
+  cat(crayon::bold('Date modified:'), x[,10], '\n')
+}
+
+#show instance by entering the name
+if(args$show_instance != "NA"){
+  repeat{
+    instanceName <- tolower(args$show_instance)
+    
+    checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    cat('The entered instance does not exist, please try another. \n')
+  }
+  
+  subDir <- "./FileSystem/Instances.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Name == instanceName)
+  
+  cat('\n')
+  cat(crayon::bold('Name:'), x[,1], '\n')
+  cat(crayon::bold('Description:'), x[,2], '\n')
+  cat(crayon::bold('Training:'), x[,3], '\n')
+  cat(crayon::bold('#training:'), x[,4], '\n')
+  cat(crayon::bold('Testing:'), x[,5], '\n')
+  cat(crayon::bold('#testing:'), x[,6], '\n')
+  cat(crayon::bold('RouteTraining:'), x[,7], '\n')
+  cat(crayon::bold('RouteTesting:'), x[,8], '\n')
+  cat(crayon::bold('Date added:'), x[,9], '\n')
+  cat(crayon::bold('Date modified:'), x[,10], '\n')
+}
+
+#show version by entering the name
+if(args$show_version != "NA"){
+  repeat{
+    versionNumber <- tolower(args$show_version)
+    
+    checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    cat('The entered version does not exist, please try another. \n')
+  }
+
+  subDir <- "./FileSystem/Version.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Version_Number == versionNumber)
+  
+  cat('\n')
+  cat(crayon::bold('Version Number:'), x[,1], '\n')
+  cat(crayon::bold('Description:'), x[,2], '\n')
+  cat(crayon::bold('Route:'), x[,3], '\n')
+  cat(crayon::bold('Date added:'), x[,4], '\n')
+  cat(crayon::bold('Date modified:'), x[,5], '\n')
+}
+
+#show experiment by entering the name
+if(args$show_experiment != "NA"){
+  repeat{
+    experimentName <- tolower(args$show_experiment)
+    
+    checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
+    
+    if(file.exists(checkFile)){
+      break
+    }
+    cat('The entered experiment does not exist, please try another. \n')
+  }
+  
+  subDir <- "./FileSystem/Experiment.txt"
+  
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  
+  x <- subset(fileData, Experiment == experimentName)
+  
+  cat('\n')
+  cat(crayon::bold('Name:'), x[,1], '\n')
+  cat(crayon::bold('Description:'), x[,2], '\n')
+  cat(crayon::bold('Version:'), x[,3], '\n')
+  cat(crayon::bold('Scenario:'), x[,4], '\n')
+  cat(crayon::bold('#Repetitions:'), x[,5], '\n')
+  cat(crayon::bold('Results:'), x[,6], '\n')
+  cat(crayon::bold('Settings:'), x[,7], '\n')
+  cat(crayon::bold('Status:'), x[,8], '\n')
+  cat(crayon::bold('Experiment-path:'), x[,9], '\n')
+  cat(crayon::bold('Date added:'), x[,10], '\n')
+  cat(crayon::bold('Date modified:'), x[,11], '\n')
+}
+
 #show scenario
-if(args$show_scenario){
+if(args$showScenario){
   repeat{
     cat('Enter the scenario to display: \n')
     scenarioName <- tolower(scan(quiet = T,'stdin', character(), n=1))
@@ -1075,9 +1266,9 @@ if(args$show_scenario){
 }
 
 #show target
-if(args$show_target){
+if(args$showTarget){
   repeat{
-    #cat('Enter the target algorithm to display: \n')
+    cat('Enter the target algorithm to display: \n')
     targetName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
@@ -1104,7 +1295,7 @@ if(args$show_target){
 }
 
 #show parameter
-if(args$show_parameter){
+if(args$showParameter){
   repeat{
     cat('Enter the parameter to display: \n')
     parameterName <- tolower(scan(quiet = T,'stdin', character(), n=1))
@@ -1137,7 +1328,7 @@ if(args$show_parameter){
 }
 
 #show instance
-if(args$show_instance){
+if(args$showInstance){
   repeat{
     cat('Enter the instance to display: \n')
     instanceName <- tolower(scan(quiet = T,'stdin', character(), n=1))
@@ -1170,7 +1361,7 @@ if(args$show_instance){
 }
 
 #show version
-if(args$show_version){
+if(args$showVersion){
   repeat{
     cat('Enter the version to display: \n')
     versionNumber <- scan(quiet = T,'stdin', character(), n=1)
@@ -1182,7 +1373,7 @@ if(args$show_version){
     }
     cat('The entered version does not exist, please try another. \n')
   }
-
+  
   subDir <- "./FileSystem/Version.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
@@ -1198,7 +1389,7 @@ if(args$show_version){
 }
 
 #show experiment
-if(args$show_experiment){
+if(args$showExperiment){
   repeat{
     cat('Enter the experiment to display: \n')
     experimentName <- tolower(scan(quiet = T,'stdin', character(), n=1))
