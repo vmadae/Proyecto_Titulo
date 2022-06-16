@@ -8,3 +8,5 @@ Element,Name,Path
 "Parameter","parameter_spear","./FileSystem/Files/Target/spear"
 "Parameter","parameter_moaco","./FileSystem/Files/Target/moaco"
 "Parameter","parameter_acv1","./FileSystem/Files/Target/acv1"
+"Instances","tsp","./FileSystem/Files/Instances/tsp"
+"Instances","sat","./FileSystem/Files/Instances/sat"

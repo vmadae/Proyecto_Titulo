@@ -324,7 +324,7 @@ addParameter <- function(flagParameter){
 addInstance <- function(flagInstance){
   #Request data from the user
   repeat{
-    cat('Enter the instance name to add: \n')
+    cat(blue$bold('Enter the instance name to add: \n'))
     instanceName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #Check if the file exists
@@ -333,48 +333,45 @@ addInstance <- function(flagInstance){
     if(!file.exists(checkFile)){
       break
     }
-    cat('The file you want to input already exists, please try again. \n')
+    cat(magenta('The file you want to input already exists, please try again. \n'))
   }
   
   #The description of the add instance is requested.
-  cat(('Enter the instance description to add: \n'))
+  cat(blue$bold('Enter the instance description to add: \n'))
   instanceDescription <- tolower(readLines("stdin", n = 1))
   
   #The user is prompted to enter the path of the file that lists the instances.
   repeat{
-    cat(('Enter the instance training to add: \n'))
+    cat(blue$bold ('Enter the instance training to add: \n'))
     instanceTraining <- scan(quiet = T,'stdin', character(), n=1)
-    
-    #Check if the file exists
-    checkFile <- instanceTraining 
-    
-    if(file.exists(checkFile)){
+  
+    if(file.exists(instanceTraining)){
       break
     }
-    cat('The file you want to input already no exists, please try again. \n')
+    cat(magenta('The file you want to input already no exists, please try again. \n'))
   }
   
   #Enter the number of instances the training set contains.
-  cat(('Enter the instance number of the training to add: \n'))
+  cat(blue$bold('Enter the instance number of the training to add: \n'))
   instanceNumberTraining <- scan(quiet = T,'stdin', integer(), n=1)
   
   #The user is asked if they want to add the instance files.
   repeat{
-    cat('Do you want to add the file that instances? \n')
-    cat('Enter "Y" if you want to add and "N" if you dont want to add it. \n')
+    cat(blue$bold('Do you want to add the file that instances? \n'))
+    cat(blue$bold('Enter "Y" if you want to add and "N" if you dont want to add it. \n'))
     optRouteTraining <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #If the user wants to add it, they are prompted to enter the file path.
     if(optRouteTraining == 'y'){
       repeat{
-        cat('Enter the path where the file containing the instances for the training set is located. \n')
+        cat(blue$bold('Enter the path where the file containing the instances for the training set is located. \n'))
         instanceRouteTraining <- scan(quiet = T,'stdin', character(), n=1)
         
         #Check if the file exists
         if(file.exists(instanceRouteTraining)){
           break
         }
-        cat('The file you entered does not exist, please try again. \n')
+        cat(magenta('The file you entered does not exist, please try again. \n'))
       }
       break
     }
@@ -387,42 +384,42 @@ addInstance <- function(flagInstance){
     
     #In case the user makes a mistake when entering the option, he must enter it again.
     if(optRouteTraining != 'y' | optRouteTraining != 'n'){
-      cat("The option entered is incorrect, please try again. \n")
+      cat(magenta("The option entered is incorrect, please try again. \n"))
     }
   }
   
   #The user is prompted to enter the file that lists instances for the test set.
   repeat{
-    cat(('Enter the path to the text file that lists the instances for the test set.: \n'))
+    cat(blue$bold('Enter the path to the text file that lists the instances for the test set: \n'))
     instanceTesting <- scan(quiet = T,'stdin', character(), n=1)
     
     if(file.exists(instanceTesting)){
       break
     }
-    cat('The file you entered does not exist, please try again. \n')
+    cat(magenta('The file you entered does not exist, please try again. \n'))
   }
   
   #the user is prompted to enter the number of instances for the test set.
-  cat(('Enter the number of instances for the test set: \n'))
+  cat(blue$bold('Enter the number of instances for the test set: \n'))
   instanceNumberTesting <- scan(quiet = T,'stdin', integer(), n=1)
   
   #The user is asked if they want to add the instance files.
   repeat{
-    cat('Do you want to add the instance files? \n')
-    cat('Enter "Y" if you want to add and "N" if you dont want to add it. \n')
+    cat(blue$bold('Do you want to add the instance files? \n'))
+    cat(blue$bold('Enter "Y" if you want to add and "N" if you dont want to add it. \n'))
     optRouteTesting <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #If the user wants to add it, they are prompted to enter the file path.
     if(optRouteTesting == 'y'){
       repeat{
-        cat('Enter the path where the test set instance files are located. \n')
+        cat(blue$bold('Enter the path where the test set instance files are located. \n'))
         instanceRouteTesting <- scan(quiet = T,'stdin', character(), n=1)
         
         #Check if the file exists
         if(file.exists(instanceRouteTesting)){
           break
         }
-        cat('The file you entered does not exist, please try again. \n')
+        cat(magenta('The file you entered does not exist, please try again. \n'))
       }
       break
     }
@@ -435,7 +432,7 @@ addInstance <- function(flagInstance){
     
     #In case the user makes a mistake when entering the option, he must enter it again.
     if(optRouteTesting != 'y' | optRouteTesting != 'n'){
-      cat("The option entered is incorrect, please try again. \n")
+      cat(magenta("The option entered is incorrect, please try again. \n"))
     }
   }
   
@@ -504,6 +501,16 @@ addInstance <- function(flagInstance){
                        Sys.Date(),
                        "-")
   write.table(instanceData, file = "./FileSystem/Instances.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  #Add to file for the update to github
+  dataForGitHub <- list("Instances",
+                        instanceName,
+                        checkFile)
+  write.table(dataForGitHub, file = "./FileSystem/SubmitGitHub.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  cat("\n")
+  cat(magenta('The instance has been entered successfully. \n'))
+  cat("\n")
   
   if(flagInstance == TRUE){
     return(instanceName)
@@ -1001,7 +1008,6 @@ if(args$add_parameter){
 if(args$add_instances){
   flagInstance = FALSE
   addInstance(flagInstance)
-  cat('The instance has been entered successfully. \n')
 }
 
 #add scenario
