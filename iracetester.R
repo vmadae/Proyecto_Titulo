@@ -521,7 +521,7 @@ addInstance <- function(flagInstance){
 addScenario <- function(flagScenario){
   #Request data from the user
   repeat{
-    cat('Enter the name of scenario to add: \n')
+    cat(blue$bold('Enter the name of scenario to add: \n'))
     scenarioName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #Check if the file exists
@@ -530,16 +530,16 @@ addScenario <- function(flagScenario){
     if(!file.exists(checkFile)){
       break
     }
-    cat('The file name you want to input already exists, please try again. \n')
+    cat(magenta('The file name you want to input already exists, please try again. \n'))
   }
   
   #The user is asked to enter the description of the scenario to add.
-  cat('Enter the scenario description: \n')
+  cat(blue$bold('Enter the scenario description: \n'))
   scenarioDescription <- tolower(readLines("stdin", n = 1))
   
   #The user is prompted to enter a parameter.
   repeat{
-    cat('Enter the space parameter for the scenario: \n')
+    cat(blue$bold('Enter the space parameter for the scenario: \n'))
     parameterSpace <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #Check if the file exists
@@ -551,8 +551,8 @@ addScenario <- function(flagScenario){
     
     #If the entered parameter does not exist, the user is asked if he wants to add it or not.
     repeat{
-      cat('The entered parameter does not exist in the database, want to add it? \n')
-      cat('Enter "Y" to add or "N" to try again. \n')
+      cat(blue$bold('The entered parameter does not exist in the database, want to add it? \n'))
+      cat(blue$bold('Enter "Y" to add or "N" to try again. \n'))
       opt <- tolower(scan(quiet = T,'stdin', character(), n=1))
       
       #If you want to add, call the function.
@@ -567,7 +567,7 @@ addScenario <- function(flagScenario){
       }
       #If the option entered is incorrect, the user is informed.
       if(opt == "y"| opt == "n"){
-        cat('The option entered is not valid, please try again. \n')
+        cat(magenta('The option entered is not valid, please try again. \n'))
       }
       Sys.sleep(0.5)
     }
@@ -580,20 +580,20 @@ addScenario <- function(flagScenario){
   
   #The user is prompted to enter the set of parameters to be used in the scenario.
   repeat{
-    cat('Enter the set of instances for the scenario: \n')
-    setInstances<- tolower(scan(quiet = T,'stdin', character(), n=1))
+    cat(blue$bold('Enter the set of instances for the scenario: \n'))
+    setInstances <- tolower(scan(quiet = T,'stdin', character(), n=1))
+    
+    checkInstance <- paste("./FileSystem/Files/Instances", setInstances, sep = "/")
     
     #Check if the file exists
-    checkFile <- paste("./FileSystem/Files/Instances", setInstances, sep = "/")
-    
-    if(file.exists(checkFile)){
+    if(file.exists(checkInstance)){
       break
     }
     
     #If the set of instances is not found the user can enter a new one.
     repeat{
-      cat('The entered instances does not exist in the database, want to add it? \n')
-      cat('Enter "Y" to add or "N" to try again. \n')
+      cat(blue$bold('The entered instances does not exist in the database, want to add it? \n'))
+      cat(blue$bold('Enter "Y" to add or "N" to try again. \n'))
       opt <- tolower(scan(quiet = T,'stdin', character(), n=1))
       
       if(opt == "y"){
@@ -605,7 +605,7 @@ addScenario <- function(flagScenario){
         break
       }
       if(opt != "y" | opt != "n"){
-        cat('The option entered is not valid, please try again. \n')
+        cat(magenta('The option entered is not valid, please try again. \n'))
       }
       Sys.sleep(0.5)
     }
@@ -617,17 +617,17 @@ addScenario <- function(flagScenario){
   
   #The user is prompted to enter options for irace.
   repeat{
-    cat('Enter the option route for the scenario (.txt ): \n')
+    cat(blue$bold('Enter the option route for the scenario (.txt ): \n'))
     optionsRoute <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
     if(file.exists(optionsRoute)){
       break
     }
-    cat('The entered option route does not exist in the file system, please try again. \n')
+    cat(magenta('The entered option route does not exist in the file system, please try again. \n'))
   }
   
-  cat('Enter the type of the scenario: \n')
+  cat(blue$bold('Enter the type of the scenario: \n'))
   scenarioType <- tolower(readLines("stdin", n = 1))
   
   #Add files to the file system
@@ -655,6 +655,16 @@ addScenario <- function(flagScenario){
                        Sys.Date(),
                        "-")
   write.table(scenarioData, file = "./FileSystem/Scenario.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  #Add to file for the update to github
+  dataForGitHub <- list("Scenario",
+                        scenarioName,
+                        checkFile)
+  write.table(dataForGitHub, file = "./FileSystem/SubmitGitHub.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  cat("\n")
+  cat(blue$bold('The stage was added successfully. \n'))
+  cat("\n")
   
   if(flagScenario == TRUE){
     return(scenarioName)
@@ -1014,7 +1024,6 @@ if(args$add_instances){
 if(args$add_scenario){
   flagScenario <- FALSE
   addScenario(flagScenario)
-  cat('The stage was added successfully. \n')
 }
 
 #add version

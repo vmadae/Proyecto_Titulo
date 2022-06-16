@@ -10,3 +10,4 @@ Element,Name,Path
 "Parameter","parameter_acv1","./FileSystem/Files/Target/acv1"
 "Instances","tsp","./FileSystem/Files/Instances/tsp"
 "Instances","sat","./FileSystem/Files/Instances/sat"
+"Scenario","scenario_acotsp","./FileSystem/Files/Parameters/parameter_acotsp"
