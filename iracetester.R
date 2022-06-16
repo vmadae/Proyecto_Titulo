@@ -1021,43 +1021,55 @@ if(args$add_experiment){
 
 #list scenario
 if(args$list_scenario){
+  #The item's .txt file is read
   subDir <- "./FileSystem/Scenario.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  #The relevant information of each element is displayed
   kable(fileData[, c(1,6,7,8)])
 }
 
 #list target
 if(args$list_target){
+  #The item's .txt file is read
   subDir <- "./FileSystem/Target.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  #The relevant information of each element is displayed
   kable(fileData[, c(1,5,6)])
 }
 
 #list parameters
 if(args$list_parameters){
+  #The item's .txt file is read
   subDir <- "./FileSystem/Parameters.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  #The relevant information of each element is displayed
   kable(fileData[,c(1,3,9,10)])
 }
 
 #list instances
 if(args$list_instances){
+  #The item's .txt file is read
   subDir <- ("./FileSystem/Instances.txt")
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  #The relevant information of each element is displayed
   kable(fileData[,c(1,9,10)])
 }
 
 #list versions
 if(args$list_versions){
+  #The item's .txt file is read
   subDir <- "./FileSystem/Version.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  #The relevant information of each element is displayed
   kable(fileData[, c(1,4,5)])
 }
 
 #list experiment
 if(args$list_experiment){
+  #The item's .txt file is read
   subDir <- "./FileSystem/Experiment.txt"
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  #The relevant information of each element is displayed
   kable(fileData[,c(1,3,4,8,10,11)])
 }
 
@@ -1067,11 +1079,13 @@ if(args$list_experiment){
 
 #show scenario by entering the name
 if(args$show_scenario != "NA"){
-
+  #The name entered by the user is assigned to a variable
   scenarioName <- tolower(args$show_scenario)
-    
+  
+  ##It checks if the entered name exists
   checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
-    
+  
+  #If the name entered does not exist, it will be indicated to the user and they will be able to enter another valid one
   if(!file.exists(checkFile)){
     cat(magenta('The entered scenario does not exist, please try another.'))
     cat('\n')
@@ -1089,12 +1103,14 @@ if(args$show_scenario != "NA"){
     }
   }
   
+  ##The information of the scenario entered within the file system is searched
   subDir <- "./FileSystem/Scenario.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Name == scenarioName)
   
+  ##Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1108,10 +1124,13 @@ if(args$show_scenario != "NA"){
 
 #show target by entering the name
 if(args$show_target != "NA"){
+  #The name entered by the user is assigned to a variable
   targetName <- tolower(args$show_target)
   
+  #It checks if the entered name exists
   checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
   
+  #If the name entered does not exist, it will be indicated to the user and they will be able to enter another valid one.
   if(!file.exists(checkFile)){
     cat(magenta('The entered target does not exist, please try another. \n'))
     
@@ -1128,27 +1147,32 @@ if(args$show_target != "NA"){
     }
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Target.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Name == targetName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
   cat(blue$underline$bold('Target rounner route:'), x[,3], '\n')
-  cat(blue$underline$bold('Executable path:'), x[,4], '\n')
+  cat(blue$underline$bold('Executable route:'), x[,4], '\n')
   cat(blue$underline$bold('Date added:'), x[,5], '\n')
   cat(blue$underline$bold('Date modified:'), x[,6], '\n')
 }
 
 #show parameter by entering the name
 if(args$show_parameter != "NA"){
+  #The name entered by the user is assigned to a variable
   parameterName <- tolower(args$show_parameter)
   
+  #It checks if the entered name exists
   checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
   
+  #If the name entered does not exist, it will be indicated to the user and they will be able to enter another valid one.
   if(!file.exists(checkFile)){
     cat(magenta('The entered parameter does not exist, please try another. \n'))
     
@@ -1165,12 +1189,14 @@ if(args$show_parameter != "NA"){
     }
   }
   
+  ##The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Parameters.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Name == parameterName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1186,10 +1212,13 @@ if(args$show_parameter != "NA"){
 
 #show instance by entering the name
 if(args$show_instance != "NA"){
+  #The name entered by the user is assigned to a variable
   instanceName <- tolower(args$show_instance)
   
+  ##It checks if the entered name exists
   checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
   
+  ##If the name entered does not exist, it will be indicated to the user and they will be able to enter another valid one.
   if(!file.exists(checkFile)){
     cat(magenta('The entered instance does not exist, please try another. \n'))
     
@@ -1206,12 +1235,14 @@ if(args$show_instance != "NA"){
     }
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Instances.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Name == instanceName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1227,10 +1258,13 @@ if(args$show_instance != "NA"){
 
 #show version by entering the name
 if(args$show_version != "NA"){
+  #The name entered by the user is assigned to a variable
   versionNumber <- tolower(args$show_version)
   
+  #It checks if the entered name exists
   checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
   
+  #If the name entered does not exist, it will be indicated to the user and they will be able to enter another valid one.
   if(!file.exists(checkFile)){
     cat(magenta('The entered version does not exist, please try another. \n'))
     
@@ -1247,12 +1281,14 @@ if(args$show_version != "NA"){
     }
   }
 
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Version.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Version.Number == versionNumber)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Version Number:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1263,10 +1299,13 @@ if(args$show_version != "NA"){
 
 #show experiment by entering the name
 if(args$show_experiment != "NA"){
+  #The name entered by the user is assigned to a variable
   experimentName <- tolower(args$show_experiment)
   
+  #It checks if the entered name exists
   checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
   
+  #If the name entered does not exist, it will be indicated to the user and they will be able to enter another valid one.
   if(!file.exists(checkFile)){
     cat(magenta('The entered experiment does not exist, please try another. \n'))
     
@@ -1283,12 +1322,14 @@ if(args$show_experiment != "NA"){
     }
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Experiment.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Experiment == experimentName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1306,9 +1347,11 @@ if(args$show_experiment != "NA"){
 #show scenario
 if(args$showScenario){
   repeat{
+    #The user is asked to enter the target name to display
     cat(blue$bold('Enter the scenario to display: \n'))
     scenarioName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
+    #It checks if the entered name exists
     checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
     
     if(file.exists(checkFile)){
@@ -1318,12 +1361,14 @@ if(args$showScenario){
     cat('\n')
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Scenario.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Name == scenarioName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1338,9 +1383,11 @@ if(args$showScenario){
 #show target
 if(args$showTarget){
   repeat{
+    #The user is asked to enter the target name to display
     cat(blue$bold('Enter the target algorithm to display: \n'))
     targetName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
+    #It checks if the entered name exists
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
     
     if(file.exists(checkFile)){
@@ -1349,17 +1396,19 @@ if(args$showTarget){
     cat(magenta('The entered target does not exist, please try another. \n'))
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Target.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Name == targetName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
   cat(blue$underline$bold('Target rounner route:'), x[,3], '\n')
-  cat(blue$underline$bold('Executable path:'), x[,4], '\n')
+  cat(blue$underline$bold('Executable route:'), x[,4], '\n')
   cat(blue$underline$bold('Date added:'), x[,5], '\n')
   cat(blue$underline$bold('Date modified:'), x[,6], '\n')
 }
@@ -1367,9 +1416,11 @@ if(args$showTarget){
 #show parameter
 if(args$showParameter){
   repeat{
+    #The user is asked to enter the target name to display
     cat(blue$bold('Enter the parameter to display: \n'))
     parameterName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
+    #It checks if the entered name exists
     checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
     
     if(file.exists(checkFile)){
@@ -1378,12 +1429,14 @@ if(args$showParameter){
     cat(magenta('The entered parameter does not exist, please try another. \n'))
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Parameters.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Name == parameterName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1400,9 +1453,11 @@ if(args$showParameter){
 #show instance
 if(args$showInstance){
   repeat{
+    #The user is asked to enter the target name to display
     cat(blue$bold('Enter the instance to display: \n'))
     instanceName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
+    #It checks if the entered name exists
     checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
     
     if(file.exists(checkFile)){
@@ -1411,12 +1466,14 @@ if(args$showInstance){
     cat(magenta('The entered instance does not exist, please try another. \n'))
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Instances.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Name == instanceName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1433,9 +1490,11 @@ if(args$showInstance){
 #show version
 if(args$showVersion){
   repeat{
+    #The user is asked to enter the target name to display
     cat(blue$bold('Enter the version to display: \n'))
     versionNumber <- scan(quiet = T,'stdin', character(), n=1)
     
+    #It checks if the entered name exists
     checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
     
     if(file.exists(checkFile)){
@@ -1444,12 +1503,14 @@ if(args$showVersion){
     cat(magenta('The entered version does not exist, please try another. \n'))
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Version.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Version.Number == versionNumber)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Version Number:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')
@@ -1461,9 +1522,11 @@ if(args$showVersion){
 #show experiment
 if(args$showExperiment){
   repeat{
+    #The user is asked to enter the target name to display
     cat(blue$bold('Enter the experiment to display: \n'))
     experimentName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
+    #It checks if the entered name exists
     checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
     
     if(file.exists(checkFile)){
@@ -1472,12 +1535,14 @@ if(args$showExperiment){
     cat(magenta('The entered experiment does not exist, please try another. \n'))
   }
   
+  #The information of the target entered within the file system is searched
   subDir <- "./FileSystem/Experiment.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
   x <- subset(fileData, Experiment == experimentName)
   
+  #Information is displayed to the user
   cat('\n')
   cat(blue$underline$bold('Name:'), x[,1], '\n')
   cat(blue$underline$bold('Description:'), x[,2], '\n')

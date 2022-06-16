@@ -1,2 +1,6 @@
 Element,Name,Path
 "Target","spear","./FileSystem/Files/Target/spear"
+"Target","moaco","./FileSystem/Files/Target/moaco"
+"Target","lingeling","./FileSystem/Files/Target/lingeling"
+"Target","acotsp","./FileSystem/Files/Target/acotsp"
+"Target","acv1","./FileSystem/Files/Target/acv1"
