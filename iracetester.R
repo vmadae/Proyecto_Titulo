@@ -304,11 +304,20 @@ addParameter <- function(flagParameter){
                         "-")
   write.table(parameterData, file = "./FileSystem/Parameters.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
+  #Add to file for the update to github
+  dataForGitHub <- list("Parameter",
+                        parametersName,
+                        checkFile)
+  write.table(dataForGitHub, file = "./FileSystem/SubmitGitHub.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  
+  cat("\n")
+  cat(blue$bold('The parameter has been added successfully. \n'))
+  cat("\n")
+  
   if(flagParameter == TRUE){
     return(parametersName)
   }
-  
-  cat(blue$bold('The parameter has been added successfully. \n'))
 }
 
 #Function to add instance

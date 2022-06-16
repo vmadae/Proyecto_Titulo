@@ -4,3 +4,7 @@ Element,Name,Path
 "Target","lingeling","./FileSystem/Files/Target/lingeling"
 "Target","acotsp","./FileSystem/Files/Target/acotsp"
 "Target","acv1","./FileSystem/Files/Target/acv1"
+"Parameter","parameter_acotsp","./FileSystem/Files/Target/acotsp"
+"Parameter","parameter_spear","./FileSystem/Files/Target/spear"
+"Parameter","parameter_moaco","./FileSystem/Files/Target/moaco"
+"Parameter","parameter_acv1","./FileSystem/Files/Target/acv1"
