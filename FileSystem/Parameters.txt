@@ -1,2 +1,1 @@
 Name,Description,Target.algorithm,#Parameters,Type,Forbidden,Initial,File.path,Date.added,Date.modified
-"patameters_acotsp","--","acotsp","./FileSystem/Files/Parameters/patameters_acotsp/patameters_acotsp_parameters.txt","prueba","./FileSystem/Files/Parameters/patameters_acotsp/patameters_acotsp_forbidden.txt","./FileSystem/Files/Parameters/patameters_acotsp/patameters_acotsp_initial.txt","./FileSystem/Files/Parameters/patameters_acotsp",2022-05-29,"-"

@@ -1,2 +1,1 @@
 Name,Description,Parameter.space,Set.of.instances,Route.options,Type,Date.added,Date.modified
-"scenario_acotsp","--","patameters_acotsp","tsp","./FileSystem/Files/Scenario/scenario_acotsp/scenario_acotsp_options.txt","prueba",2022-05-29,"-"

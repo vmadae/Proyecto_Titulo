@@ -1,7 +1,8 @@
 ###############################################################################################################
 #VALIDATE PACKAGE
 ###############################################################################################################
-packages <- c("argparser","readr","knitr","shiny","shinythemes","gt","irace")
+#A list is generated with the packages used by the system
+packages <- c("argparser","readr","knitr","shiny","shinythemes","gt","irace","crayon")
 
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
@@ -9,6 +10,7 @@ if (any(installed_packages == FALSE)) {
   install.packages(packages[!installed_packages], repos = "http://cran.us.r-project.org")
 }
 
+#package warnings are suppressed for a cleaner terminal
 suppressWarnings(library(argparser, quietly=TRUE))
 suppressWarnings(library(readr))
 suppressWarnings(library(knitr))
@@ -16,6 +18,7 @@ suppressWarnings(library(shiny))
 suppressWarnings(library(shinythemes))
 suppressWarnings(library(gt))
 suppressWarnings(library(irace))
+suppressWarnings(library(crayon))
 
 # Packages loading
 invisible(lapply(packages, library, character.only = TRUE))
@@ -29,7 +32,7 @@ addTarget <- function(flagTarget){
   #Request data from the user
   repeat{
     #The name of the target to be added is requested
-    cat('Enter the name of the target algorithm to add: \n')
+    cat(blue$bold('Enter the name of the target algorithm to add: \n'))
     targetName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #check if the file exists
@@ -38,35 +41,35 @@ addTarget <- function(flagTarget){
     if(!file.exists(checkFile)){
       break
     }
-    cat('The file you want to input already exists, please try again. \n')
+    cat(magenta('The file you want to input already exists, please try again. \n'))
   }
   
   #The description of the target to be added is requested
-  cat('Enter a description corresponding to the target to enter: \n')
+  cat(blue$bold('Enter a description corresponding to the target to enter: \n'))
   targetDescription <- tolower(readLines("stdin", n = 1))
   
   #The runner file of the target to be added is requested
   repeat{
-    cat('Enter the path where the target runner file is hosted: \n')
+    cat(blue$bold('Enter the path where the target runner file is hosted: \n'))
     routeTargetRunner <- scan(quiet = T,'stdin', character(), n=1)
     
     #check if the file exists
     if(file.exists(routeTargetRunner)){
       break
     }
-    cat("The file you entered does not exist, please try again. \n")
+    cat(magenta("The file you entered does not exist, please try again. \n"))
   }
   
   #The executable file of the target to be added is requested
   repeat{
-    cat('Enter the path of the target executable: \n')
+    cat(blue$bold('Enter the path of the target executable: \n'))
     executablePathTarget <- scan(quiet = T,'stdin', character(), n=1)
     
     #check if the file exists
     if(file.exists(executablePathTarget)){
       break
     }
-    cat('The file you entered does not exist, please try again. \n')
+    cat(magenta('The file you entered does not exist, please try again. \n'))
   }
   
   #Add files to the file system
@@ -98,6 +101,18 @@ addTarget <- function(flagTarget){
                      "-")
   write.table(targetData, file = "./FileSystem/Target.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
   
+  #Add to file for the update to github
+  dataForGitHub <- list("Target",
+                        targetName,
+                        checkFile)
+  write.table(dataForGitHub, file = "./FileSystem/SubmitGitHub.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  #The user is informed that the target was added successfully.
+  cat("\n")
+  cat(blue$bold('The target has been entered successfully. \n'))
+  cat("\n")
+  
+  #If it was requested to create the target from another configuration element, the name is returned.
   if(flagTarget == TRUE){
     return(targetName)
   }
@@ -108,7 +123,7 @@ addParameter <- function(flagParameter){
   #Request data from the user
   repeat{
     #The name of the parameter to be added is requested
-    cat('Enter the name of the parameter to add: \n')
+    cat(blue$bold('Enter the name of the parameter to add: \n'))
     parametersName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #Check if the file exists
@@ -117,16 +132,16 @@ addParameter <- function(flagParameter){
     if(!file.exists(checkFile)){
       break
     }
-    cat('The file you want to input already exists, please try again. \n')
+    cat(magenta('The file you want to input already exists, please try again. \n'))
   }
   
   #The description of the parameter to be added is requested
-  cat('Enter a description of the parameter you want to add: \n')
+  cat(blue$bold('Enter a description of the parameter you want to add: \n'))
   parametersDescription <- tolower(readLines("stdin", n = 1))
   
   #The target algorithm that will be used for the new parameter is requested
   repeat{
-    cat('Enter the target algorithm to use: \n')
+    cat(blue$bold('Enter the target algorithm to use: \n'))
     targetAlgorithm <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #Check if the file exists
@@ -138,8 +153,8 @@ addParameter <- function(flagParameter){
     
     #If the target algorithm entered by the user is not found in the system, the user can add it or choose another
     repeat{
-      cat('The entered target algorithm does not exist in the database, want to add it? \n')
-      cat('Enter "Y" to add or "N" to try again. \n')
+      cat(blue$bold('The entered target algorithm does not exist in the database, want to add it? \n'))
+      cat(blue$bold('Enter "Y" to add or "N" to try again. \n'))
       opt <- tolower(scan(quiet = T,'stdin', character(), n=1))
       
       #Entering the "Y" option performs the add target function
@@ -154,7 +169,7 @@ addParameter <- function(flagParameter){
       }
       #If the user enters another undefined letter, it is indicated that the option entered is not valid and it is requested to enter the option again.
       if(opt != "y" | opt != "n"){
-        cat('The option entered is not valid, please try again. \n')
+        cat(magenta('The option entered is not valid, please try again. \n'))
       }
       Sys.sleep(0.5)
     }
@@ -166,37 +181,37 @@ addParameter <- function(flagParameter){
 
   #The text file is requested that lists the parameters that irace must configure, which will be used for the new parameter.
   repeat{
-    cat(('Enter the path of the file (.txt) that contains the list of parameters to be configured by irace: \n'))
+    cat(blue$bold('Enter the path of the file (.txt) that contains the list of parameters to be configured by irace: \n'))
     parameters <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
     if(file.exists(parameters)){
       break
     }
-    cat('The file you entered does not exist, please try again. \n')
+    cat(magenta('The file you entered does not exist, please try again. \n'))
   }
   
   #The type of the parameter to add is requested
-  cat('Enter the type of the parameter: \n')
+  cat(blue$bold('Enter the type of the parameter: \n'))
   typeParameters <- scan(quiet = T,'stdin', character(), n=1)
   
   #The user is asked if he wants to add the file that lists prohibited combinations of parameters.
   repeat{
-    cat('Do you want to enter the list of prohibited combinations of parameter values? \n')
-    cat('Enter "Y" if you want to add and "N" if you dont want to add it. \n')
+    cat(blue$bold('Do you want to enter the list of prohibited combinations of parameter values? \n'))
+    cat(blue$bold('Enter "Y" if you want to add and "N" if you dont want to add it. \n'))
     optForbidden <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #If the user wants to add it, they are prompted to enter the file path.
     if(optForbidden == 'y'){
       repeat{
-        cat('Enter the path of the file (.txt) containing the list of prohibited combinations of parameter values: \n')
+        cat(blue$bold('Enter the path of the file (.txt) containing the list of prohibited combinations of parameter values: \n'))
         forbidden <- scan(quiet = T,'stdin', character(), n=1)
         
         #Check if the file exists
         if(file.exists(forbidden)){
           break
         }
-        cat('The file you entered does not exist, please try again. \n')
+        cat(magenta('The file you entered does not exist, please try again. \n'))
       }
       break
     }
@@ -209,27 +224,27 @@ addParameter <- function(flagParameter){
     
     #In case the user makes a mistake when entering the option, he must enter it again.
     if(optForbidden != 'y' | optForbidden != 'n'){
-      cat("The option entered is incorrect, please try again. \n")
+      cat(magenta("The option entered is incorrect, please try again. \n"))
     }
   }
   
   #The user is asked if he wants to add the file that provides settings to start the search in irace.
   repeat{
-    cat('Do you want to add the file that provides the configuration to start the search in irace? \n')
-    cat('Enter "Y" if you want to add and "N" if you dont want to add it. \n')
+    cat(blue$bold('Do you want to add the file that provides the configuration to start the search in irace? \n'))
+    cat(blue$bold('Enter "Y" if you want to add and "N" if you dont want to add it. \n'))
     optInitial <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #If the user wants to add it, they are prompted to enter the file path.
     if(optInitial == 'y'){
       repeat{
-        cat('Enter the path of the file that provides the configuration to start the search in irace. \n')
+        cat(blue$bold('Enter the path of the file that provides the configuration to start the search in irace. \n'))
         initial <- scan(quiet = T,'stdin', character(), n=1)
         
         #Check if the file exists
         if(file.exists(initial)){
           break
         }
-        cat('The file you entered does not exist, please try again. \n')
+        cat(magenta('The file you entered does not exist, please try again. \n'))
       }
       break
     }
@@ -242,7 +257,7 @@ addParameter <- function(flagParameter){
     
     #In case the user makes a mistake when entering the option, he must enter it again.
     if(optInitial != 'y' | optInitial != 'n'){
-      cat("The option entered is incorrect, please try again. \n")
+      cat(magenta("The option entered is incorrect, please try again. \n"))
     }
   }
   
@@ -292,6 +307,8 @@ addParameter <- function(flagParameter){
   if(flagParameter == TRUE){
     return(parametersName)
   }
+  
+  cat(blue$bold('The parameter has been added successfully. \n'))
 }
 
 #Function to add instance
@@ -963,14 +980,12 @@ args <- parse_args(p)
 if(args$add_target){
   flagTarget = FALSE
   addTarget(flagTarget)
-  cat('The target has been entered successfully. \n')
 }
 
 #add parameters
 if(args$add_parameter){
   flagParameter = FALSE
   addParameter(flagParameter)
-  cat('The parameter has been added successfully. \n')
 }
 
 #add instances
@@ -1052,16 +1067,26 @@ if(args$list_experiment){
 
 #show scenario by entering the name
 if(args$show_scenario != "NA"){
-  repeat{
-    scenarioName <- tolower(args$show_scenario)
+
+  scenarioName <- tolower(args$show_scenario)
     
-    checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
+  checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
     
-    if(file.exists(checkFile)){
-      break
-    }
-    cat('The entered scenario does not exist, please try another.')
+  if(!file.exists(checkFile)){
+    cat(magenta('The entered scenario does not exist, please try another.'))
     cat('\n')
+    repeat{
+      cat(blue$bold('Enter the scenario to display: \n'))
+      scenarioName <- tolower(scan(quiet = T,'stdin', character(), n=1))
+      
+      checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
+      
+      if(file.exists(checkFile)){
+        break
+      }
+      cat(magenta('The entered scenario does not exist, please try another.'))
+      cat('\n')
+    }
   }
   
   subDir <- "./FileSystem/Scenario.txt"
@@ -1071,27 +1096,36 @@ if(args$show_scenario != "NA"){
   x <- subset(fileData, Name == scenarioName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Parameter space:'), x[,3], '\n')
-  cat(crayon::bold('Set of instances:'), x[,4], '\n')
-  cat(crayon::bold('Options route:'), x[,5], '\n')
-  cat(crayon::bold('Type:'), x[,6], '\n')
-  cat(crayon::bold('Date added:'), x[,7], '\n')
-  cat(crayon::bold('Date modified:'), x[,8], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Parameter space:'), x[,3], '\n')
+  cat(blue$underline$bold('Set of instances:'), x[,4], '\n')
+  cat(blue$underline$bold('Options route:'), x[,5], '\n')
+  cat(blue$underline$bold('Type:'), x[,6], '\n')
+  cat(blue$underline$bold('Date added:'), x[,7], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,8], '\n')
 }
 
 #show target by entering the name
 if(args$show_target != "NA"){
-  repeat{
-    targetName <- args$show_target
+  targetName <- tolower(args$show_target)
+  
+  checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
+  
+  if(!file.exists(checkFile)){
+    cat(magenta('The entered target does not exist, please try another. \n'))
     
-    checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
-    
-    if(file.exists(checkFile)){
-      break
+    repeat{
+      cat(blue$bold('Enter the target algorithm to display: \n'))
+      targetName <- tolower(scan(quiet = T,'stdin', character(), n=1))
+      
+      checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
+      
+      if(file.exists(checkFile)){
+        break
+      }
+      cat(magenta('The entered target does not exist, please try another. \n'))
     }
-    cat('The entered target does not exist, please try another. \n')
   }
   
   subDir <- "./FileSystem/Target.txt"
@@ -1101,25 +1135,34 @@ if(args$show_target != "NA"){
   x <- subset(fileData, Name == targetName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Target rounner route:'), x[,3], '\n')
-  cat(crayon::bold('Executable path:'), x[,4], '\n')
-  cat(crayon::bold('Date added:'), x[,5], '\n')
-  cat(crayon::bold('Date modified:'), x[,6], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Target rounner route:'), x[,3], '\n')
+  cat(blue$underline$bold('Executable path:'), x[,4], '\n')
+  cat(blue$underline$bold('Date added:'), x[,5], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,6], '\n')
 }
 
 #show parameter by entering the name
 if(args$show_parameter != "NA"){
-  repeat{
-    parameterName <- tolower(args$show_parameter)
+  parameterName <- tolower(args$show_parameter)
+  
+  checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
+  
+  if(!file.exists(checkFile)){
+    cat(magenta('The entered parameter does not exist, please try another. \n'))
     
-    checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
-    
-    if(file.exists(checkFile)){
-      break
+    repeat{
+      cat(blue$bold('Enter the parameter to display: \n'))
+      parameterName <- tolower(scan(quiet = T,'stdin', character(), n=1))
+      
+      checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
+      
+      if(file.exists(checkFile)){
+        break
+      }
+      cat(magenta('The entered parameter does not exist, please try another. \n'))
     }
-    cat('The entered parameter does not exist, please try another. \n')
   }
   
   subDir <- "./FileSystem/Parameters.txt"
@@ -1129,29 +1172,38 @@ if(args$show_parameter != "NA"){
   x <- subset(fileData, Name == parameterName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Target algorithm:'), x[,3], '\n')
-  cat(crayon::bold('#Parameters:'), x[,4], '\n')
-  cat(crayon::bold('Type:'), x[,5], '\n')
-  cat(crayon::bold('Forbidden:'), x[,6], '\n')
-  cat(crayon::bold('Initial:'), x[,7], '\n')
-  cat(crayon::bold('File-path:'), x[,8], '\n')
-  cat(crayon::bold('Date added:'), x[,9], '\n')
-  cat(crayon::bold('Date modified:'), x[,10], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Target algorithm:'), x[,3], '\n')
+  cat(blue$underline$bold('#Parameters:'), x[,4], '\n')
+  cat(blue$underline$bold('Type:'), x[,5], '\n')
+  cat(blue$underline$bold('Forbidden:'), x[,6], '\n')
+  cat(blue$underline$bold('Initial:'), x[,7], '\n')
+  cat(blue$underline$bold('File-path:'), x[,8], '\n')
+  cat(blue$underline$bold('Date added:'), x[,9], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,10], '\n')
 }
 
 #show instance by entering the name
 if(args$show_instance != "NA"){
-  repeat{
-    instanceName <- tolower(args$show_instance)
+  instanceName <- tolower(args$show_instance)
+  
+  checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
+  
+  if(!file.exists(checkFile)){
+    cat(magenta('The entered instance does not exist, please try another. \n'))
     
-    checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
-    
-    if(file.exists(checkFile)){
-      break
+    repeat{
+      cat(blue$bold('Enter the instance to display: \n'))
+      instanceName <- tolower(scan(quiet = T,'stdin', character(), n=1))
+      
+      checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
+      
+      if(file.exists(checkFile)){
+        break
+      }
+      cat(magenta('The entered instance does not exist, please try another. \n'))
     }
-    cat('The entered instance does not exist, please try another. \n')
   }
   
   subDir <- "./FileSystem/Instances.txt"
@@ -1161,56 +1213,74 @@ if(args$show_instance != "NA"){
   x <- subset(fileData, Name == instanceName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Training:'), x[,3], '\n')
-  cat(crayon::bold('#training:'), x[,4], '\n')
-  cat(crayon::bold('Testing:'), x[,5], '\n')
-  cat(crayon::bold('#testing:'), x[,6], '\n')
-  cat(crayon::bold('RouteTraining:'), x[,7], '\n')
-  cat(crayon::bold('RouteTesting:'), x[,8], '\n')
-  cat(crayon::bold('Date added:'), x[,9], '\n')
-  cat(crayon::bold('Date modified:'), x[,10], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Training:'), x[,3], '\n')
+  cat(blue$underline$bold('#training:'), x[,4], '\n')
+  cat(blue$underline$bold('Testing:'), x[,5], '\n')
+  cat(blue$underline$bold('#testing:'), x[,6], '\n')
+  cat(blue$underline$bold('RouteTraining:'), x[,7], '\n')
+  cat(blue$underline$bold('RouteTesting:'), x[,8], '\n')
+  cat(blue$underline$bold('Date added:'), x[,9], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,10], '\n')
 }
 
 #show version by entering the name
 if(args$show_version != "NA"){
-  repeat{
-    versionNumber <- tolower(args$show_version)
+  versionNumber <- tolower(args$show_version)
+  
+  checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
+  
+  if(!file.exists(checkFile)){
+    cat(magenta('The entered version does not exist, please try another. \n'))
     
-    checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
-    
-    if(file.exists(checkFile)){
-      break
+    repeat{
+      cat(blue$bold('Enter the version to display: \n'))
+      versionNumber <- scan(quiet = T,'stdin', character(), n=1)
+      
+      checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
+      
+      if(file.exists(checkFile)){
+        break
+      }
+      cat(magenta('The entered version does not exist, please try another. \n'))
     }
-    cat('The entered version does not exist, please try another. \n')
   }
 
   subDir <- "./FileSystem/Version.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
-  x <- subset(fileData, Version_Number == versionNumber)
+  x <- subset(fileData, Version.Number == versionNumber)
   
   cat('\n')
-  cat(crayon::bold('Version Number:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Route:'), x[,3], '\n')
-  cat(crayon::bold('Date added:'), x[,4], '\n')
-  cat(crayon::bold('Date modified:'), x[,5], '\n')
+  cat(blue$underline$bold('Version Number:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Route:'), x[,3], '\n')
+  cat(blue$underline$bold('Date added:'), x[,4], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,5], '\n')
 }
 
 #show experiment by entering the name
 if(args$show_experiment != "NA"){
-  repeat{
-    experimentName <- tolower(args$show_experiment)
+  experimentName <- tolower(args$show_experiment)
+  
+  checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
+  
+  if(!file.exists(checkFile)){
+    cat(magenta('The entered experiment does not exist, please try another. \n'))
     
-    checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
-    
-    if(file.exists(checkFile)){
-      break
+    repeat{
+      cat(blue$bold('Enter the experiment to display: \n'))
+      experimentName <- tolower(scan(quiet = T,'stdin', character(), n=1))
+      
+      checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
+      
+      if(file.exists(checkFile)){
+        break
+      }
+      cat(magenta('The entered experiment does not exist, please try another. \n'))
     }
-    cat('The entered experiment does not exist, please try another. \n')
   }
   
   subDir <- "./FileSystem/Experiment.txt"
@@ -1220,23 +1290,23 @@ if(args$show_experiment != "NA"){
   x <- subset(fileData, Experiment == experimentName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Version:'), x[,3], '\n')
-  cat(crayon::bold('Scenario:'), x[,4], '\n')
-  cat(crayon::bold('#Repetitions:'), x[,5], '\n')
-  cat(crayon::bold('Results:'), x[,6], '\n')
-  cat(crayon::bold('Settings:'), x[,7], '\n')
-  cat(crayon::bold('Status:'), x[,8], '\n')
-  cat(crayon::bold('Experiment-path:'), x[,9], '\n')
-  cat(crayon::bold('Date added:'), x[,10], '\n')
-  cat(crayon::bold('Date modified:'), x[,11], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Version:'), x[,3], '\n')
+  cat(blue$underline$bold('Scenario:'), x[,4], '\n')
+  cat(blue$underline$bold('#Repetitions:'), x[,5], '\n')
+  cat(blue$underline$bold('Results:'), x[,6], '\n')
+  cat(blue$underline$bold('Settings:'), x[,7], '\n')
+  cat(blue$underline$bold('Status:'), x[,8], '\n')
+  cat(blue$underline$bold('Experiment-path:'), x[,9], '\n')
+  cat(blue$underline$bold('Date added:'), x[,10], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,11], '\n')
 }
 
 #show scenario
 if(args$showScenario){
   repeat{
-    cat('Enter the scenario to display: \n')
+    cat(blue$bold('Enter the scenario to display: \n'))
     scenarioName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
@@ -1244,7 +1314,7 @@ if(args$showScenario){
     if(file.exists(checkFile)){
       break
     }
-    cat('The entered scenario does not exist, please try another.')
+    cat(magenta('The entered scenario does not exist, please try another.'))
     cat('\n')
   }
   
@@ -1255,20 +1325,20 @@ if(args$showScenario){
   x <- subset(fileData, Name == scenarioName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Parameter space:'), x[,3], '\n')
-  cat(crayon::bold('Set of instances:'), x[,4], '\n')
-  cat(crayon::bold('Options route:'), x[,5], '\n')
-  cat(crayon::bold('Type:'), x[,6], '\n')
-  cat(crayon::bold('Date added:'), x[,7], '\n')
-  cat(crayon::bold('Date modified:'), x[,8], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Parameter space:'), x[,3], '\n')
+  cat(blue$underline$bold('Set of instances:'), x[,4], '\n')
+  cat(blue$underline$bold('Options route:'), x[,5], '\n')
+  cat(blue$underline$bold('Type:'), x[,6], '\n')
+  cat(blue$underline$bold('Date added:'), x[,7], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,8], '\n')
 }
 
 #show target
 if(args$showTarget){
   repeat{
-    cat('Enter the target algorithm to display: \n')
+    cat(blue$bold('Enter the target algorithm to display: \n'))
     targetName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     checkFile <- paste("./FileSystem/Files/Target", targetName, sep = "/")
@@ -1276,7 +1346,7 @@ if(args$showTarget){
     if(file.exists(checkFile)){
       break
     }
-    cat('The entered target does not exist, please try another. \n')
+    cat(magenta('The entered target does not exist, please try another. \n'))
   }
   
   subDir <- "./FileSystem/Target.txt"
@@ -1286,18 +1356,18 @@ if(args$showTarget){
   x <- subset(fileData, Name == targetName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Target rounner route:'), x[,3], '\n')
-  cat(crayon::bold('Executable path:'), x[,4], '\n')
-  cat(crayon::bold('Date added:'), x[,5], '\n')
-  cat(crayon::bold('Date modified:'), x[,6], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Target rounner route:'), x[,3], '\n')
+  cat(blue$underline$bold('Executable path:'), x[,4], '\n')
+  cat(blue$underline$bold('Date added:'), x[,5], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,6], '\n')
 }
 
 #show parameter
 if(args$showParameter){
   repeat{
-    cat('Enter the parameter to display: \n')
+    cat(blue$bold('Enter the parameter to display: \n'))
     parameterName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     checkFile <- paste("./FileSystem/Files/Parameters", parameterName, sep = "/")
@@ -1305,7 +1375,7 @@ if(args$showParameter){
     if(file.exists(checkFile)){
       break
     }
-    cat('The entered parameter does not exist, please try another. \n')
+    cat(magenta('The entered parameter does not exist, please try another. \n'))
   }
   
   subDir <- "./FileSystem/Parameters.txt"
@@ -1315,22 +1385,22 @@ if(args$showParameter){
   x <- subset(fileData, Name == parameterName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Target algorithm:'), x[,3], '\n')
-  cat(crayon::bold('#Parameters:'), x[,4], '\n')
-  cat(crayon::bold('Type:'), x[,5], '\n')
-  cat(crayon::bold('Forbidden:'), x[,6], '\n')
-  cat(crayon::bold('Initial:'), x[,7], '\n')
-  cat(crayon::bold('File-path:'), x[,8], '\n')
-  cat(crayon::bold('Date added:'), x[,9], '\n')
-  cat(crayon::bold('Date modified:'), x[,10], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Target algorithm:'), x[,3], '\n')
+  cat(blue$underline$bold('#Parameters:'), x[,4], '\n')
+  cat(blue$underline$bold('Type:'), x[,5], '\n')
+  cat(blue$underline$bold('Forbidden:'), x[,6], '\n')
+  cat(blue$underline$bold('Initial:'), x[,7], '\n')
+  cat(blue$underline$bold('File-path:'), x[,8], '\n')
+  cat(blue$underline$bold('Date added:'), x[,9], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,10], '\n')
 }
 
 #show instance
 if(args$showInstance){
   repeat{
-    cat('Enter the instance to display: \n')
+    cat(blue$bold('Enter the instance to display: \n'))
     instanceName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     checkFile <- paste("./FileSystem/Files/Instances", instanceName, sep = "/")
@@ -1338,7 +1408,7 @@ if(args$showInstance){
     if(file.exists(checkFile)){
       break
     }
-    cat('The entered instance does not exist, please try another. \n')
+    cat(magenta('The entered instance does not exist, please try another. \n'))
   }
   
   subDir <- "./FileSystem/Instances.txt"
@@ -1348,22 +1418,22 @@ if(args$showInstance){
   x <- subset(fileData, Name == instanceName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Training:'), x[,3], '\n')
-  cat(crayon::bold('#training:'), x[,4], '\n')
-  cat(crayon::bold('Testing:'), x[,5], '\n')
-  cat(crayon::bold('#testing:'), x[,6], '\n')
-  cat(crayon::bold('RouteTraining:'), x[,7], '\n')
-  cat(crayon::bold('RouteTesting:'), x[,8], '\n')
-  cat(crayon::bold('Date added:'), x[,9], '\n')
-  cat(crayon::bold('Date modified:'), x[,10], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Training:'), x[,3], '\n')
+  cat(blue$underline$bold('#training:'), x[,4], '\n')
+  cat(blue$underline$bold('Testing:'), x[,5], '\n')
+  cat(blue$underline$bold('#testing:'), x[,6], '\n')
+  cat(blue$underline$bold('RouteTraining:'), x[,7], '\n')
+  cat(blue$underline$bold('RouteTesting:'), x[,8], '\n')
+  cat(blue$underline$bold('Date added:'), x[,9], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,10], '\n')
 }
 
 #show version
 if(args$showVersion){
   repeat{
-    cat('Enter the version to display: \n')
+    cat(blue$bold('Enter the version to display: \n'))
     versionNumber <- scan(quiet = T,'stdin', character(), n=1)
     
     checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
@@ -1371,27 +1441,27 @@ if(args$showVersion){
     if(file.exists(checkFile)){
       break
     }
-    cat('The entered version does not exist, please try another. \n')
+    cat(magenta('The entered version does not exist, please try another. \n'))
   }
   
   subDir <- "./FileSystem/Version.txt"
   
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   
-  x <- subset(fileData, Version_Number == versionNumber)
+  x <- subset(fileData, Version.Number == versionNumber)
   
   cat('\n')
-  cat(crayon::bold('Version Number:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Route:'), x[,3], '\n')
-  cat(crayon::bold('Date added:'), x[,4], '\n')
-  cat(crayon::bold('Date modified:'), x[,5], '\n')
+  cat(blue$underline$bold('Version Number:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Route:'), x[,3], '\n')
+  cat(blue$underline$bold('Date added:'), x[,4], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,5], '\n')
 }
 
 #show experiment
 if(args$showExperiment){
   repeat{
-    cat('Enter the experiment to display: \n')
+    cat(blue$bold('Enter the experiment to display: \n'))
     experimentName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     checkFile <- paste("./FileSystem/Files/Experiment", experimentName, sep = "/")
@@ -1399,7 +1469,7 @@ if(args$showExperiment){
     if(file.exists(checkFile)){
       break
     }
-    cat('The entered experiment does not exist, please try another. \n')
+    cat(magenta('The entered experiment does not exist, please try another. \n'))
   }
   
   subDir <- "./FileSystem/Experiment.txt"
@@ -1409,17 +1479,17 @@ if(args$showExperiment){
   x <- subset(fileData, Experiment == experimentName)
   
   cat('\n')
-  cat(crayon::bold('Name:'), x[,1], '\n')
-  cat(crayon::bold('Description:'), x[,2], '\n')
-  cat(crayon::bold('Version:'), x[,3], '\n')
-  cat(crayon::bold('Scenario:'), x[,4], '\n')
-  cat(crayon::bold('#Repetitions:'), x[,5], '\n')
-  cat(crayon::bold('Results:'), x[,6], '\n')
-  cat(crayon::bold('Settings:'), x[,7], '\n')
-  cat(crayon::bold('Status:'), x[,8], '\n')
-  cat(crayon::bold('Experiment-path:'), x[,9], '\n')
-  cat(crayon::bold('Date added:'), x[,10], '\n')
-  cat(crayon::bold('Date modified:'), x[,11], '\n')
+  cat(blue$underline$bold('Name:'), x[,1], '\n')
+  cat(blue$underline$bold('Description:'), x[,2], '\n')
+  cat(blue$underline$bold('Version:'), x[,3], '\n')
+  cat(blue$underline$bold('Scenario:'), x[,4], '\n')
+  cat(blue$underline$bold('#Repetitions:'), x[,5], '\n')
+  cat(blue$underline$bold('Results:'), x[,6], '\n')
+  cat(blue$underline$bold('Settings:'), x[,7], '\n')
+  cat(blue$underline$bold('Status:'), x[,8], '\n')
+  cat(blue$underline$bold('Experiment-path:'), x[,9], '\n')
+  cat(blue$underline$bold('Date added:'), x[,10], '\n')
+  cat(blue$underline$bold('Date modified:'), x[,11], '\n')
 }
 
 ###############################################################################################################
