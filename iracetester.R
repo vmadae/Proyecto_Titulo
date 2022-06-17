@@ -734,7 +734,7 @@ addVersion <- function(flagVersion){
 addExperiment <- function(flagExperiment){
   #Request data from the user
   repeat{
-    cat('Enter the name of the experiment to add: \n')
+    cat(blue$bold('Enter the name of the experiment to add: \n'))
     experimentName <- tolower(scan(quiet = T,'stdin', character(), n=1))
     
     #Check if the file exists
@@ -743,29 +743,29 @@ addExperiment <- function(flagExperiment){
     if(!file.exists(checkFile)){
       break
     }
-    cat('The file you want to input already exists, please try again. \n')
+    cat(magenta('The file you want to input already exists, please try again. \n'))
   }
   
   #The user is prompted to enter the description pertaining to the experiment.
-  cat('Enter a description corresponding to the experiment to enter: \n')
+  cat(blue$bold('Enter a description corresponding to the experiment to enter: \n'))
   experimentDescription <- tolower(readLines("stdin", n = 1))
   
   #The user is prompted to enter the experiment to use.
   repeat{
-    cat('Enter the scenario to use in the experiment: \n')
+    cat(blue$bold('Enter the scenario to use in the experiment: \n'))
     scenarioName <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
-    checkFile <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
+    checkScenarioName <- paste("./FileSystem/Files/Scenario", scenarioName, sep = "/")
     
-    if(file.exists(checkFile)){
+    if(file.exists(checkScenarioName)){
       break
     }
     
     #If the entered scenario is not found, the option is given to create a new one or enter another one.
     repeat{
-      cat('The entered scenario does not exist in the database, want to add it? \n')
-      cat('Enter "Y" to add or "N" to try again. \n')
+      cat(blue$bold('The entered scenario does not exist in the database, want to add it? \n'))
+      cat(blue$bold('Enter "Y" to add or "N" to try again. \n'))
       opt <- tolower(scan(quiet = T,'stdin', character(), n=1))
       
       if(opt == "y"){
@@ -777,7 +777,7 @@ addExperiment <- function(flagExperiment){
         break
       }
       if(opt != "y" | opt != "n"){
-        cat('The option entered is not valid, please try again. \n')
+        cat(magenta('The option entered is not valid, please try again. \n'))
       }
       Sys.sleep(0.5)
     }
@@ -790,20 +790,20 @@ addExperiment <- function(flagExperiment){
   
   #The user is prompted to enter the version of irace to use.
   repeat{
-    cat('Enter the version of irace to use: \n')
+    cat(blue$bold('Enter the version of irace to use: \n'))
     versionNumber <- scan(quiet = T,'stdin', character(), n=1)
     
     #Check if the file exists
-    checkFile <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
+    checkVersionNumber <- paste("./FileSystem/Files/Version", versionNumber, sep = "/")
     
-    if(file.exists(checkFile)){
+    if(file.exists(checkVersionNumber)){
       break
     }
     
     #The user is prompted to enter the version of irace to use
     repeat{
-      cat('The entered version is not in the database, do you want to add another? \n')
-      cat('Enter "Y" to add or "N" to try again. \n')
+      cat(blue$bold('The entered version is not in the database, do you want to add another? \n'))
+      cat(blue$bold('Enter "Y" to add or "N" to try again. \n'))
       opt <- tolower(scan(quiet = T,'stdin', character(), n=1))
       
       if(opt == "y"){
@@ -815,7 +815,7 @@ addExperiment <- function(flagExperiment){
         break
       }
       if(opt != "y" | opt != "n"){
-        cat('The option entered is not valid, please try again. \n')
+        cat(magenta('The option entered is not valid, please try again. \n'))
       }
       Sys.sleep(0.5)
     }
@@ -827,7 +827,7 @@ addExperiment <- function(flagExperiment){
   }
   
   #The user is prompted for the number of repetitions performed by the experiment.
-  cat('Enter the number of repetitions to perform:: \n')
+  cat(blue$bold('Enter the number of repetitions to perform: \n'))
   numRepeticiones <- scan(quiet = T,'stdin', integer(), n=1)
   
   #The results will be entered after the experiment is performed.
@@ -862,6 +862,16 @@ addExperiment <- function(flagExperiment){
                      Sys.Date(),
                      "-")
   write.table(targetData, file = "./FileSystem/Experiment.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  #Add to file for the update to github
+  dataForGitHub <- list("Experiment",
+                        experimentName,
+                        checkFile)
+  write.table(dataForGitHub, file = "./FileSystem/SubmitGitHub.txt", sep = "," ,row.names = FALSE, col.names = FALSE, append = TRUE)
+  
+  cat("\n")
+  cat(blue$bold('The experiment has been added successfully. \n'))
+  cat("\n")
   
   if(flagExperiment == TRUE){
     return(experimentName)
