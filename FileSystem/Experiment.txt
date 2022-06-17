@@ -1,3 +1,4 @@
 Experiment,Description,Scenario,version,#Repetitions,Results,Settings,Status,Experiment.path,Date.added,Date.modified
 "acotspc-d.v1","experiment to be carried out with a reduced version of acotsp, this is used to verify the operation of the system.","scenario_acotsp","3.4.1",3,"","","created","",2022-06-16,"-"
 "experiment_acv1","a","scenario_acotsp","3.4.1",3,"","","created","",2022-06-16,"-"
+"acv1","experiment for the creation of tests, where it will be possible to verify if the system works as it corresponds, fulfilling the functionality of executing the experiment.","acv1.v1","3.4.1",4,"","","created","",2022-06-17,"-"

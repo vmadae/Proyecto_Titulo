@@ -1,1 +1,1 @@
-Experiment.name,Number,Description,Start.date,Version,Condition,Test.path
+Experiment.name,Number,Start.date,Condition,Test.path
