@@ -12,3 +12,5 @@ Element,Name,Path
 "Instances","sat","./FileSystem/Files/Instances/sat"
 "Scenario","scenario_acotsp","./FileSystem/Files/Parameters/parameter_acotsp"
 "Experiment","acotspc-d.v1","./FileSystem/Files/Experiment/acotspc-d.v1"
+"Scenario","scenario_acv1","./FileSystem/Files/Parameters/parameter_acv1"
+"Experiment","experiment_acv1","./FileSystem/Files/Experiment/experiment_acv1"

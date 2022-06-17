@@ -879,10 +879,15 @@ addExperiment <- function(flagExperiment){
 }
 
 #Function run the experiment
+
 runExperiment <- function(scenarioName, nameExperiment, nRepetitions, cores, 
                           scenarioFile, parameterFile, targetRunner, 
                           trainInstancesFile, testInstancesFile, 
                           configurationsFile, forbiddenFile){
+  
+  
+  
+  
   
   # create directory for repetitions
   path_to_test <- paste("./FileSystem/Files/Iterations", scenarioName, sep= "/")
@@ -894,17 +899,27 @@ runExperiment <- function(scenarioName, nameExperiment, nRepetitions, cores,
   scenario_files$forbiddenFile <- forbiddenFile
   scenario_files$configurationsFile <- configurationsFile
   scenario_files$targetRunner <- targetRunner
+  
   scenario_files$trainInstancesFile <- trainInstancesFile
-  print(scenario_files$trainInstancesFile)
+  cat(scenario_files$parameterFile)
+  cat('\n')
   scenario_files$testInstancesFile <- testInstancesFile
   
   scenario_files$trainInstancesDir <- ""
   scenario_files$testInstancesDir <- ""
   
   scenario <- irace::defaultScenario(scenario_files)
-  print(scenario$trainInstancesFile)
+  cat('\n---\n')
+  print(scenario)
+  cat('\n---\n')
   scenario <- irace::readScenario(filename=scenarioFile, scenario=scenario)
-  print(scenario$trainInstancesFile)
+  scenario$trainInstancesFile <- trainInstancesFile
+  scenario$execDir <- ''
+  cat('\n---\n')
+  print(scenario)
+  cat('\n---\n')
+  
+  
   
   # set parallel cores
   if (!is.null(cores)) {
@@ -2072,11 +2087,9 @@ if(args$execute_experiment){
   xInstance <- subset(fileData, Name == nameInstance)
   
   trainInstancesFile <- xInstance[,3]
-  print(trainInstancesFile)
   testInstancesFile <- xInstance[,5]
-  print(testInstancesFile)
   
-  targetRunner="./FileSystem/Files/Target/trunv.p.1/trunv.p.1_runner.exe"
+  targetRunner="./FileSystem/Files/Target/acv1/acv1_runner"
   
   runExperiment(scenarioName, nameExperiment, nRepetitions, cores, 
                 scenarioFile, parameterFile, targetRunner, 

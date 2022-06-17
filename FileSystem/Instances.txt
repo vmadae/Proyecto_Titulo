@@ -1,3 +1,3 @@
 Name,Description,Training,#training,Testing,#testing,Route.Training,Route.Testing,Date.added,Date.modified
-"tsp","instance for the algorithm acotsp","./FileSystem/Files/Instances/tsp/tsp_training/tsp_list_instances",50,"./FileSystem/Files/Instances/tsp/tsp_testing/tsp_list_instances",50,"-1","-1",2022-06-16,"-"
-"sat","un solucionador de b£squeda de  rbol exacto para sat","./FileSystem/Files/Instances/sat/sat_training/sat_list_instances",20,"./FileSystem/Files/Instances/sat/sat_testing/sat_list_instances",50,"-1","-1",2022-06-16,"-"
+"tsp","instance for the algorithm acotsp","./FileSystem/Files/Instances/tsp/tsp_training/tsp_list_instances.txt",50,"./FileSystem/Files/Instances/tsp/tsp_testing/tsp_list_instances.txt",50,"-1","-1",2022-06-16,"-"
+"sat","un solucionador de b?squeda de ?rbol exacto para sat","./FileSystem/Files/Instances/sat/sat_training/sat_list_instances",20,"./FileSystem/Files/Instances/sat/sat_testing/sat_list_instances",50,"-1","-1",2022-06-16,"-"
