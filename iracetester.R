@@ -979,6 +979,7 @@ p <- add_argument(p, short = "-lp", "--list_parameters", help="List all paramete
 p <- add_argument(p, short = "-li", "--list_instances", help="List all instance sets", type="string", flag=TRUE)
 p <- add_argument(p, short = "-lv", "--list_versions", help="List all versions of irace", type="string", flag=TRUE)
 p <- add_argument(p, short = "-le", "--list_experiment", help="List all registered experiments", type="string", flag=TRUE)
+p <- add_argument(p, short = "-le", "--list_iteration", help="List all registered iteration", type="string", flag=TRUE)
 
 #Argument to display by entering the name
 p <- add_argument(p, short = "-ss", "--show_scenario", help="Show details of a scenario", type="string", default ="NA")
@@ -1125,6 +1126,15 @@ if(args$list_experiment){
   fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
   #The relevant information of each element is displayed
   kable(fileData[,c(1,3,4,8,10,11)])
+}
+#list iterations
+if(args$list_iteration){
+  #The item's .txt file is read
+  subDir <- "./FileSystem/Iteration.txt"
+  fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
+  #The relevant information of each element is displayed
+  kable(fileData[,c(1,2,3,4,5)])
+  cat('/n')
 }
 
 ###############################################################################################################
@@ -1837,10 +1847,16 @@ if(args$modify_target){
       #modify file path
       file.rename(oldTargetPath,newTargetPath)
       
+      
+      
       #--modify target on Target.txt
       subDir <- "./FileSystem/Target.txt"
       fileData <- read.delim(file = subDir, header = TRUE, sep = ",", dec = ".")
       
+      newTargetExecutablePath <- paste(newTargetPath,paste(newTargetName,'executable.zip',sep = '_'),sep = '/')
+      newTargetRunnerPath <- paste(newTargetPath,paste(newTargetName,'runner',sep = '_'),sep = '/')
+      fileData$Executable.path[fileData$Name == oldTargetName] <- newTargetExecutablePath
+      fileData$Target.runner.route[fileData$Name == oldTargetName] <- newTargetRunnerPath
       fileData$Date.modified[fileData$Name == oldTargetName] <- format(Sys.Date(), format="%Y-%m-%d")
       fileData$Name[fileData$Name == oldTargetName] <- newTargetName
       
